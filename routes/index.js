@@ -1,114 +1,162 @@
 var express = require('express');
 var router = express.Router();
 var mongoose = require('mongoose');
+var geocoder = require('geocoder'); // geocoder library
 
 // our db model
-var Animal = require("../models/model.js");
+var Spend = require("../models/spend.js");
 
-/**
- * GET '/'
- * Default home route. Just relays a success message back.
- * @param  {Object} req
- * @return {Object} json
- */
+//-------------------------------------------------------------------------------
 router.get('/', function(req, res) {
   
-  var jsonData = {
-  	'name': 'node-express-api-boilerplate',
-  	'api-status':'OK'
-  }
+  // var jsonData = {
+  // 	'name': 'canlory-data',
+  // 	'api-status':'OK'
+  // }
+// // respond with json data
+  // res.json(jsonData)
 
-  // respond with json data
-  res.json(jsonData)
+  res.render('index.html')
 });
 
 // simple route to show an HTML page
-router.get('/sample-page', function(req,res){
-  res.render('sample.html')
+router.get('/add-spend', function(req,res){
+  res.render('index.html')
 })
 
-// /**
-//  * POST '/api/create'
-//  * Receives a POST request of the new user and location, saves to db, responds back
-//  * @param  {Object} req. An object containing the different attributes of the Person
-//  * @return {Object} JSON
-//  */
+router.get('/submit-spend', function(req,res){
+  res.render('result.html')
+})
+
+
+
+// /**-----------------------------------------------------------------------------//
 
 router.post('/api/create', function(req, res){
 
+    
+    //return res.redirect('/add-meal');
+    console.log('the data we received is --> ')
     console.log(req.body);
-
     // pull out the information from the req.body
-    var name = req.body.name;
-    var age = req.body.age;
-    var tags = req.body.tags.split(","); // split string into array
-    var weight = req.body.weight;
-    var color = req.body.color;
+
+    var price = req.body.price;
+    var stuffname = req.body.stuffname;
+    var category = req.body.category;
+    var month = req.body.month;
+    var sdate = req.body.sdate; 
+    var spendtime = req.body.spendtime;
+    var shop = req.body.shop;
+    var location = req.body.location;
+    var note = req.body.note;
     var url = req.body.url;
-
-    // hold all this data in an object
-    // this object should be structured the same way as your db model
-    var animalObj = {
-      name: name,
-      age: age,
-      tags: tags,
-      description: {
-        weight: weight,
-        color: color
-      },
-      url: url
+    var mood = req.body.mood;
+    
+    var spendObj = {
+      price: price,
+      stuffname: stuffname,
+      category:category,
+      month:month,
+      sdate:sdate,
+      spendtime:spendtime,
+      shop:shop,
+      //location:location,
+      note:note,
+      url:url,
+      mood:mood
     };
+    
+    // location thing
+    if(!location) return res.json({status:'ERROR', message: 'You are missing a required field or have submitted a malformed request.'})
 
-    // create a new animal model instance, passing in the object
-    var animal = new Animal(animalObj);
+    geocoder.geocode(location, function (err,data) {
 
-    // now, save that animal instance to the database
-    // mongoose method, see http://mongoosejs.com/docs/api.html#model_Model-save    
-    animal.save(function(err,data){
+      if (!data || data==null || err || data.status == 'ZERO_RESULTS'){
+        var error = {status:'ERROR', message: 'Error finding location'};
+        return res.json({status:'ERROR', message: 'You are missing a required field or have submitted a malformed request.'})
+      }
+
+      var lon = data.results[0].geometry.location.lng;
+      var lat = data.results[0].geometry.location.lat;
+  
+      spendObj.location = {
+        geo: [lon,lat], 
+        name: data.results[0].formatted_address 
+      }
+     // location end
+
+    var  spend = new Spend(spendObj);
+   
+    spend.save(function(err,data){
       // if err saving, respond back with error
       if (err){
-        var error = {status:'ERROR', message: 'Error saving animal'};
+        var error = {
+          status:'ERROR', 
+          message: 'Error saving spend'
+        }
         return res.json(error);
       }
 
-      console.log('saved a new animal!');
+      console.log('saved a new spend!');
       console.log(data);
-
-      // now return the json data of the new animal
+      
       var jsonData = {
         status: 'OK',
-        animal: data
+        spend: data
       }
 
-      return res.json(jsonData);
+      //return res.json(jsonData);
+      //return res.render('result.html');
+      return res.redirect('/submit-spend')
 
-    })  
+    }) 
+
+    }); 
 });
+//------------------------------------------------------------------------------------------//
 
-// /**
-//  * GET '/api/get/:id'
-//  * Receives a GET request specifying the animal to get
-//  * @param  {String} req.param('id'). The animalId
-//  * @return {Object} JSON
-//  */
+router.get('/api/get', function(req, res){
+  // mongoose method to find all, see http://mongoosejs.com/docs/api.html#model_Model.find
+  Spend.find(function(err, data){
+    // if err or no animals found, respond with error 
+    if(err || data == null){
+      var error = {
+        status:'ERROR',
+        message: 'Could not find spend'
+      }
+      return res.json(error);
+    }
+
+    var jsonData = {
+      status: 'OK',
+      spends: data
+    } 
+
+    return res.json(jsonData);
+
+  })
+
+})
+
+// _______________________________________________________________________________________/**
 
 router.get('/api/get/:id', function(req, res){
 
   var requestedId = req.param('id');
 
   // mongoose method, see http://mongoosejs.com/docs/api.html#model_Model.findById
-  Animal.findById(requestedId, function(err,data){
+  Spend.findById(requestedId, function(err,data){
 
     // if err or no user found, respond with error 
     if(err || data == null){
-      var error = {status:'ERROR', message: 'Could not find that animal'};
+      var error = {status:'ERROR', message: 'Could not find that spend'};
        return res.json(error);
     }
 
     // otherwise respond with JSON data of the animal
     var jsonData = {
       status: 'OK',
-      animal: data
+      spend: data
     }
 
     return res.json(jsonData);
@@ -116,43 +164,8 @@ router.get('/api/get/:id', function(req, res){
   })
 })
 
-// /**
-//  * GET '/api/get'
-//  * Receives a GET request to get all animal details
-//  * @return {Object} JSON
-//  */
 
-router.get('/api/get', function(req, res){
-
-  // mongoose method to find all, see http://mongoosejs.com/docs/api.html#model_Model.find
-  Animal.find(function(err, data){
-    // if err or no animals found, respond with error 
-    if(err || data == null){
-      var error = {status:'ERROR', message: 'Could not find animals'};
-      return res.json(error);
-    }
-
-    // otherwise, respond with the data 
-
-    var jsonData = {
-      status: 'OK',
-      animals: data
-    } 
-
-    res.json(jsonData);
-
-  })
-
-})
-
-// /**
-//  * POST '/api/update/:id'
-//  * Receives a POST request with data of the animal to update, updates db, responds back
-//  * @param  {String} req.param('id'). The animalId to update
-//  * @param  {Object} req. An object containing the different attributes of the Animal
-//  * @return {Object} JSON
-//  */
-
+//----------------------------------------------------------------------------------------------------//
 router.post('/api/update/:id', function(req, res){
 
    var requestedId = req.param('id');
@@ -160,91 +173,124 @@ router.post('/api/update/:id', function(req, res){
    var dataToUpdate = {}; // a blank object of data to update
 
     // pull out the information from the req.body and add it to the object to update
-    var name, age, weight, color, url; 
+    var price, stuffname, category, month, sdate, spendtime, shop, location, tag, note, url, mood;
 
     // we only want to update any field if it actually is contained within the req.body
     // otherwise, leave it alone.
-    if(req.body.name) {
-      name = req.body.name;
+    if(req.body.price) {
+      price = req.body.price;
       // add to object that holds updated data
-      dataToUpdate['name'] = name;
+      dataToUpdate['price'] = price;
     }
-    if(req.body.age) {
-      age = req.body.age;
+    if(req.body.stuffname) {
+      stuffname = req.body.stuffname;
       // add to object that holds updated data
-      dataToUpdate['age'] = age;
+      dataToUpdate['stuffname'] = stuffname;
     }
-    if(req.body.weight) {
-      weight = req.body.weight;
+    if(req.body.category) {
+      category = req.body.category;
       // add to object that holds updated data
-      dataToUpdate['description'] = {};
-      dataToUpdate['description']['weight'] = weight;
+      dataToUpdate['category'] = category;
+      
     }
-    if(req.body.color) {
-      color = req.body.color;
+    if(req.body.month) {
+      month = req.body.month;
       // add to object that holds updated data
-      if(!dataToUpdate['description']) dataToUpdate['description'] = {};
-      dataToUpdate['description']['color'] = color;
+      dataToUpdate['month'] = month;
+    }
+    if(req.body.sdate) {
+      sdate = req.body.sdate;
+      // add to object that holds updated data
+      dataToUpdate['sdate'] = sdate;
+    }
+    if(req.body.spendtime) {
+      spendtime = req.body.spendtime;
+      // add to object that holds updated data
+      dataToUpdate['spendtime'] = spendtime;
+    }
+    if(req.body.shop) {
+      shop = req.body.shop;
+      // add to object that holds updated data
+      dataToUpdate['shop'] = shop;
+    }
+    if(req.body.note) {
+      note = req.body.note;
+      // add to object that holds updated data
+      dataToUpdate['note'] = note;
     }
     if(req.body.url) {
       url = req.body.url;
       // add to object that holds updated data
       dataToUpdate['url'] = url;
     }
-
-    var tags = []; // blank array to hold tags
-    if(req.body.tags){
-      tags = req.body.tags.split(","); // split string into array
+    if(req.body.mood) {
+      mood = req.body.mood;
       // add to object that holds updated data
-      dataToUpdate['tags'] = tags;
+      dataToUpdate['url'] = mood;
+    }
+    //update location
+     if(req.body.location) {
+      location = req.body.location;
     }
 
+    // if there is no location, return an error
+    if(!location) return res.json({status:'ERROR', message: 'You are missing a required field or have submitted a malformed request.'})
+
+    geocoder.geocode(location, function (err,data) {
+
+      if (!data || data==null || err || data.status == 'ZERO_RESULTS'){
+        var error = {status:'ERROR', message: 'Error finding location'};
+        return res.json({status:'ERROR', message: 'You are missing a required field or have submitted a malformed request.'})
+      }
+
+      var lon = data.results[0].geometry.location.lng;
+      var lat = data.results[0].geometry.location.lat;
+
+      dataToUpdate['location'] = {
+        geo: [lon,lat], // need to put the geo co-ordinates in a lng-lat array for saving
+        name: data.results[0].formatted_address // the location name
+      }
+
+    //location end
 
     console.log('the data to update is ' + JSON.stringify(dataToUpdate));
 
     // now, update that animal
     // mongoose method findByIdAndUpdate, see http://mongoosejs.com/docs/api.html#model_Model.findByIdAndUpdate  
-    Animal.findByIdAndUpdate(requestedId, dataToUpdate, function(err,data){
+    Spend.findByIdAndUpdate(requestedId, dataToUpdate, function(err,data){
       // if err saving, respond back with error
       if (err){
-        var error = {status:'ERROR', message: 'Error updating animal'};
+        var error = {status:'ERROR', message: 'Error updating spend'};
         return res.json(error);
       }
 
-      console.log('updated the animal!');
+      console.log('updated the spend!');
       console.log(data);
 
       // now return the json data of the new person
       var jsonData = {
         status: 'OK',
-        animal: data
+        spend: data
       }
 
       return res.json(jsonData);
 
     })
-
+   });  
 })
 
-/**
- * GET '/api/delete/:id'
- * Receives a GET request specifying the animal to delete
- * @param  {String} req.param('id'). The animalId
- * @return {Object} JSON
- */
-
+//------------------------------------------------------------------------------//
 router.get('/api/delete/:id', function(req, res){
 
   var requestedId = req.param('id');
 
   // Mongoose method to remove, http://mongoosejs.com/docs/api.html#model_Model.findByIdAndRemove
-  Animal.findByIdAndRemove(requestedId,function(err, data){
+  Spend.findByIdAndRemove(requestedId,function(err, data){
     if(err || data == null){
-      var error = {status:'ERROR', message: 'Could not find that animal to delete'};
+      var error = {status:'ERROR', message: 'Could not find that spend to delete'};
       return res.json(error);
     }
 
-    // otherwise, respond back with success
     var jsonData = {
       status: 'OK',
       message: 'Successfully deleted id ' + requestedId

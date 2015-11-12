@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>What I have for my meal</title>
+
+    <!-- Custom Font -->
+    <link href='http://fonts.googleapis.com/css?family=Raleway:200,500,700,800,900' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Bitter:400,700' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Pathway+Gothic+One' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans+Condensed:300' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Hind:300|Sintony:400,700|Signika+Negative:300,400,700' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/animate.css">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/timeline.css">
+  </head>
+
+  <body>
+  <div  class="wow fadeIndown animated" id="map-canvas"></div>
+
+  <section class="content wow fadeIndown animated" id="first-section">
+    
+    
+   <div class="title-new title-index wow fadeInUp animated">How much I spend on today?</div>
+    
+   <div class="chart-container ">
+      <div class="col-md-4">
+          <h4>How I spend in each category(Total)</h4>
+          <div class="stats-holder">
+            <span id="eatingCount"></span> Eating Spend
+          </div>
+          <div class="stats-holder">
+            <span id="drinkCount"></span> Drink Spend
+          </div>
+          <div class="clear-fix"></div>
+          <div id="doughnutChartLegend" class="legend"></div>
+          <canvas id="doughnutChart"></canvas>
+      </div>
+   </div>
+   <section id="cd-timeline" class="cd-container">
+   </section>
+
+  <div class="wrap">
+    <div class="row" id="spends-holder"></div>
+  </div>
+   
+ </section>
+  
+
+  
+  
+</body>
+
+    <!-- JQuery script -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script> 
+    <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&key=AIzaSyAcN6VtdpM55-CGGyEAWX2qEWs_Qwg4wXM"></script>    
+
+    <!-- Latest compiled and minified JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js" integrity="sha512-K1qjQ+NcF2TYO/eI3M6v8EiNYZfA95pQumfvcVrTHtwQVDG+aHRqLi/ETn2uB+1JqwYqVG3LIvdm9lj6imS/pQ==" crossorigin="anonymous"></script>
+   
+    <!-- JQuery validate -->
+    <script src="http://ajax.aspnetcdn.com/ajax/jquery.validate/1.14.0/jquery.validate.min.js"></script> 
+    <!-- CUSTOM JS -->
+    <script src="js/main.js"></script>
+     <script src="js/dateformatting.js"></script> 
+       <!-- CHART JS -->
+    <script src="js/Chart.js"></script>
+</html>
