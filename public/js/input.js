@@ -1,0 +1,92 @@
+var desiredWidth;
+
+//----------------------------------------------------------default input -----------------------------------
+var renderTime=function(){
+  var now=new Date();
+  var month=dateFormat(now,"mmmm");
+  var date= dateFormat(now,"d");
+  var year=dateFormat(now,"yyyy");
+  var time=dateFormat(now,"shortTime");
+  document.getElementById('input-month').value = month;
+  document.getElementById('input-sdate').value = date;
+  document.getElementById('input-spendtime').value = time;
+  
+  console.log(month);
+  console.log(date);
+  console.log(year);
+  console.log(time);
+}
+
+var renderLocation=function(){
+  if(navigator.geolocation){
+     navigator.geolocation.watchPosition(successCallback, errorCallback, {});
+     function successCallback(currentPosition) {
+        alert("reading user's current location");
+        
+        var lat = currentPosition.coords.latitude,
+        long = currentPosition.coords.longitude;
+ 
+        var mapElem = document.getElementById('map');
+        mapElem.innerHTML = '<img src="http://maps.googleapis.com/maps/api/staticmap?markers=' + lat + ',' + long + '&zoom=20&size=300x300&sensor=false" />';         
+        }
+
+        function errorCallback(e) {
+          alert(e);
+        }
+      } else {
+        alert("Geolocation is not supported by this browser.");
+      }
+}
+
+var defaultInput=function(){
+  renderTime();
+  renderLocation();
+}
+//---------------------------------------------------------take photos by phonegap-----------------------------------
+// function takePicture() {
+
+//   navigator.camera.getPicture(onSuccess, onFail, { quality: 50,
+//       destinationType: Camera.DestinationType.FILE_URI
+//   });
+// }
+
+// function onSuccess(imageData) {
+//     var image = document.getElementById('mypicture');
+//     //image.src = "data:image/jpeg;base64," + imageData;
+//     console.log(imageData);
+//     image.src = imageData;
+
+// }
+
+// function onFail(message) {
+//     alert('Failed because: ' + message);
+// }
+
+//---------------------------------------------------------take photos by browser-----------------------------------
+
+    
+    
+    // desiredWidth = window.innerWidth;
+        
+    //     if(!("url" in window) && ("webkitURL" in window)) {
+    //         window.URL = window.webkitURL;   
+    //     }
+    
+
+  
+  
+    //Credit: https://www.youtube.com/watch?v=EPYnGFEcis4&feature=youtube_gdata_player
+  function gotPic(event) {
+    console.log("got Pic");
+        if(event.target.files.length == 1 && 
+           event.target.files[0].type.indexOf("../img/") == 0) {
+            $("#display-img").attr("src",URL.createObjectURL(event.target.files[0]));
+            console.log($("#display-img").URL);
+        }
+  }
+  
+
+//----------------------------------------------------------call function-------------------------
+
+window.addEventListener('load', defaultInput());
+$("#takePictureField").on("change",gotPic);

@@ -15,48 +15,7 @@ function init() {
   
   renderPlaces();
 }
-//----------------------------------------------------------default input -----------------------------------
-var renderTime=function(){
-  var now=new Date();
-  var month=dateFormat(now,"mmmm");
-  var date= dateFormat(now,"d");
-  var year=dateFormat(now,"yyyy");
-  var time=dateFormat(now,"shortTime");
-  document.getElementById('input-month').value = month;
-  document.getElementById('input-sdate').value = date;
-  document.getElementById('input-spendtime').value = time;
-  
-  console.log(month);
-  console.log(date);
-  console.log(year);
-  console.log(time);
-}
 
-var renderLocation=function(){
-  if(navigator.geolocation){
-     navigator.geolocation.watchPosition(successCallback, errorCallback, {});
-     function successCallback(currentPosition) {
-        alert("reading user's current location");
-        
-        var lat = currentPosition.coords.latitude,
-        long = currentPosition.coords.longitude;
- 
-        var mapElem = document.getElementById('map');
-        mapElem.innerHTML = '<img src="http://maps.googleapis.com/maps/api/staticmap?markers=' + lat + ',' + long + '&zoom=20&size=300x300&sensor=false" />';         
-        }
-
-        function errorCallback(e) {
-          alert(e);
-        }
-      } else {
-        alert("Geolocation is not supported by this browser.");
-      }
-}
-
-var defaultInput=function(){
-  renderTime();
-  renderLocation();
-}
 //---------------------------------------------------------take photos-----------------------------------
 function takePicture() {
 
@@ -355,5 +314,5 @@ function renderCounts(eatingTotal,drinkTotal){
 //--------------------------------------------------------------------------------------------
 //$( "#btn-photo" ).click(takePicture());
 //document.getElementById('btn-photo').addEventListener('click', renderFoods);
-window.addEventListener('load', defaultInput());
+
 google.maps.event.addDomListener(window, 'load', init);
