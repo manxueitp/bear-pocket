@@ -353,7 +353,7 @@ function renderCounts(eatingTotal,drinkTotal){
 
 }
 //--------------------------------------------------------------------------------------------
-$( "#btn-photo" ).click(takePicture());
+//$( "#btn-photo" ).click(takePicture());
 //document.getElementById('btn-photo').addEventListener('click', renderFoods);
 window.addEventListener('load', defaultInput());
 google.maps.event.addDomListener(window, 'load', init);

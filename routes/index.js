@@ -52,6 +52,10 @@ router.post('/api/create', function(req, res){
     var url = req.body.url;
     var mood = req.body.mood;
     
+    var currentYear = new Date().getFullYear();
+    var monthNumber = convertMonthNameToNumber(month);
+    var datePurchased = new Date(currentYear + '-' + monthNumber + '-'+ sdate);
+    
     var spendObj = {
       price: price,
       stuffname: stuffname,
@@ -63,7 +67,8 @@ router.post('/api/create', function(req, res){
       //location:location,
       note:note,
       url:url,
-      mood:mood
+      mood:mood,
+      datePurchased: datePurchased
     };
     
     // location thing
@@ -115,9 +120,17 @@ router.post('/api/create', function(req, res){
 });
 //------------------------------------------------------------------------------------------//
 
+function convertMonthNameToNumber(monthName) {
+    var myDate = new Date(monthName + " 1, 2000");
+    var monthDigit = myDate.getMonth();
+    return isNaN(monthDigit) ? 0 : (monthDigit + 1);
+}
+
 router.get('/api/get', function(req, res){
+
+  var date = req.query.date;
   // mongoose method to find all, see http://mongoosejs.com/docs/api.html#model_Model.find
-  Spend.find(function(err, data){
+  Spend.find().sort('datePurchased').exec(function(err, data){
     // if err or no animals found, respond with error 
     if(err || data == null){
       var error = {

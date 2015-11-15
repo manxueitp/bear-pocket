@@ -17,6 +17,7 @@ var spendSchema= new Schema({
 	note: String,
 	url: String,
 	mood: String,
+	datePurchased: Date,
 	dateAdded : { type: Date, default: Date.now },
 })
 
