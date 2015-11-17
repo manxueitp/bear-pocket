@@ -881,3 +881,67 @@ li span{
 #display-img{
   width: 100%;
 }
+
+/***************************/
+/*category button*/
+/***************************/
+label > input{ /* HIDE RADIO */
+  display:none;
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+label > input + div{ /* IMAGE STYLES */
+  top: 0;
+  left: 0;
+  width: 60px;
+  height: 60px;
+  display: block;
+  border-radius: 50%;
+  box-shadow: 0 0 0 4px white, inset 0 2px 0 rgba(0, 0, 0, 0.08), 0 3px 0 4px rgba(0, 0, 0, 0.05);
+
+}
+label > input:checked + div{ /* (CHECKED) IMAGE STYLES */
+   background: #032063;
+   -webkit-box-shadow: 0 0 0 4px white, 0px 0px 10px 4px rgba(242,255,140,1);
+   -moz-box-shadow: 0 0 0 4px white, 0px 0px 10px 4px rgba(242,255,140,1);
+   box-shadow: 0 0 0 4px white, 0px 0px 10px 4px rgba(242,255,140,1);
+   transition: all 1s;
+}
+
+label > .iconC{
+  display: block;
+  font-size: 24px;
+  color: #fff;
+  font-weight: 300;
+  width: 24px;
+  height: 24px;
+  position: relative;
+  left: 50%;
+  top: 50%;
+  margin-left: -12px;
+  margin-top: -12px;
+}
+
+.margin-bottom-10 {
+  margin-bottom: 10px;
+}
+
+label > input[type=file]{ /* HIDE RADIO */
+    position: relative;
+    width: 100%;
+    height: 100%;
+    text-decoration: none;
+    font-weight: 700;
+    display: block;
+    color: #032063;
+    background: #3fc5ad;
+    padding: 16px 28px;
+    line-height: 20px;
+    font-weight: 600;
+    font-size: 20px;
+    text-align: center;
+    border-bottom: 5px solid #2BB9A0;
+    color: #032063;
+}
+

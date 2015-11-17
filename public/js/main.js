@@ -16,25 +16,7 @@ function init() {
   renderPlaces();
 }
 
-//---------------------------------------------------------take photos-----------------------------------
-function takePicture() {
 
-  navigator.camera.getPicture(onSuccess, onFail, { quality: 50,
-      destinationType: Camera.DestinationType.FILE_URI
-  });
-}
-
-function onSuccess(imageData) {
-    var image = document.getElementById('mypicture');
-    //image.src = "data:image/jpeg;base64," + imageData;
-    console.log(imageData);
-    image.src = imageData;
-
-}
-
-function onFail(message) {
-    alert('Failed because: ' + message);
-}
 //----------------------------------------------------------google map show places-----------------------------------
 var renderPlaces = function() {
   var infowindow =  new google.maps.InfoWindow({
@@ -73,7 +55,6 @@ var renderPlaces = function() {
       }
       
       renderSpends(spends);
-
       setChartDefaults();
       buildDoughnutChart(spends);
 
@@ -86,6 +67,7 @@ var bindInfoWindow = function(marker, map, infowindow, html) {
         infowindow.open(map, marker);
     });
 }
+
 function clearMarkers(){
   for (var i = 0; i < markers.length; i++) {
     markers[i].setMap(null); // clears the markers

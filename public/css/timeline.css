@@ -151,40 +151,40 @@ header h1 {
   margin-left: -12px;
   margin-top: -12px;
 }
-.cd-timeline-img.cd-rental {
+.cd-rental {
   background: #efd232;
 }
-.cd-timeline-img.cd-food {
+.cd-health {
   background: #f68680;
 }
-.cd-timeline-img.cd-drink {
+.cd-drink {
   background: #f9a160;
 }
-.cd-timeline-img.cd-eating {
+.cd-eating {
   background: #d86b94 ;
 }
-.cd-timeline-img.cd-living {
+.cd-living {
   background: #8486e5;
 }
-.cd-timeline-img.cd-transport {
+.cd-transport {
   background: #82a9f9;
 }
-.cd-timeline-img.cd-entertainment {
+.cd-entertainment {
   background: #82d4f9;
 }
-.cd-timeline-img.cd-shopping {
+.cd-shopping {
   background: #82f9cb;
 }
 
 
-.cd-timeline-img .icon{
+.icon{
   display: block;
   font-size: 24px;
   color: #fff;
   font-weight: 300;
   width: 24px;
   height: 24px;
-  position: relative;
+  position: absolute;
   left: 50%;
   top: 50%;
   margin-left: -12px;

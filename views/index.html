@@ -18,6 +18,7 @@
     <link rel="stylesheet" href="css/animate.css">
     <!-- Custom CSS -->
     <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/timeline.css">
   </head>
   
 
@@ -39,13 +40,56 @@
           </div>
           <!-- category -->
           <div class="row">
-            <div class="col-sm-12 centered ">
-              <span class="input input--minoru wow fadeInUp animated">
-                  <input class="input__field input__field--a" type="text" id="input-category" name="category" />
-                  <label class="input__label input__label--a" for="category">
-                    <span class="input__label-content input__label-content--a"> Category| <span class="sub">Which category</span></span>
-                  </label>
-              </span>
+            <div class="col-sm-12 col-md-6 col-lg-10 ">
+              <label class="col-sm-3 col-lg-1 margin-bottom-10 centered ">
+                <input type="radio" id="input-category" name="category" value="eating" />
+                   <div class="cd-eating wow fadeInLeft animated">
+                     <i class="fa fa-cutlery icon"></i>
+                   </div>
+              </label>
+              <label class="col-sm-3 col-lg-1 margin-bottom-10 centered ">
+                <input type="radio" id="input-category" name="category" value="rental" />
+                   <div class="cd-rental wow fadeInLeft animated">
+                     <i class="fa fa-home icon"></i>
+                   </div>
+              </label>
+              <label class="col-sm-3 col-lg-1 margin-bottom-10 centered ">
+                <input type="radio" id="input-category" name="category" value="drink" />
+                   <div class="cd-drink wow fadeInLeft animated">
+                     <i class="fa fa-coffee icon"></i>
+                   </div>
+              </label>
+              <label class="col-sm-3 col-lg-1  margin-bottom-10 centered ">
+                <input type="radio" id="input-category" name="category" value="health" />
+                   <div class="cd-health wow fadeInLeft animated">
+                     <i class="fa fa-medkit icon"></i>
+                   </div>
+              </label>
+              <label class="col-sm-3 col-lg-1 margin-bottom-10 centered ">
+                <input type="radio" id="input-category" name="category" value="living" />
+                   <div class="cd-living wow fadeInLeft animated">
+                     <i class="fa fa-bed icon"></i>
+                   </div>
+              </label>
+              <label class="col-sm-3 col-lg-1 margin-bottom-10 centered ">
+                <input type="radio" id="input-category" name="category" value="transport" />
+                   <div class="cd-transport wow fadeInLeft animated">
+                     <i class="fa fa-subway icon"></i>
+                   </div>
+              </label>
+              <label class="col-sm-3 col-lg-1 margin-bottom-10 centered ">
+                <input type="radio" id="input-category" name="category" value="entertainment" />
+                   <div class="cd-entertainment wow fadeInLeft animated">
+                     <i class="fa fa-gamepad icon"></i>
+                   </div>
+              </label>
+              <label class="col-sm-3 col-lg-1 margin-bottom-10 centered ">
+                <input type="radio" id="input-category" name="category" value="shopping" />
+                   <div class="cd-shopping wow fadeInLeft animated">
+                     <i class="fa fa-shopping-cart icon"></i>
+                   </div>
+              </label>
+              
             </div>
            </div>
            
@@ -129,11 +173,10 @@
         <!-- take photo -->
         <div class="row">
           <div class="col-sm-8">
-            <input type="file" capture="camera" accept="image/*" id="takePictureField"/>
+            <label>
+              <input type="file" capture="camera" accept="image/*" id="takePictureField"/>
+            </label>
             <img id="display-img">
-            <canvas></canvas>
-            <button class="btn-submit wow fadeInLeft animated" type="" id="btn-photo"><a>Take Photos</a></button>
-            
           </div>
           <div class="mypicture">
           </div>
