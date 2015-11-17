@@ -1,5 +1,5 @@
 var desiredWidth;
-
+ var geocoder = new google.maps.Geocoder;
 //----------------------------------------------------------default input -----------------------------------
 var renderTime=function(){
   var now=new Date();
@@ -21,18 +21,37 @@ var renderLocation=function(){
   if(navigator.geolocation){
      navigator.geolocation.watchPosition(successCallback, errorCallback, {});
      function successCallback(currentPosition) {
-        alert("reading user's current location");
+        //alert("reading user's current location");
         
         var lat = currentPosition.coords.latitude,
         long = currentPosition.coords.longitude;
+
+        var latlng={lat: lat, lng: long};
  
         var mapElem = document.getElementById('map');
         mapElem.innerHTML = '<img src="http://maps.googleapis.com/maps/api/staticmap?markers=' + lat + ',' + long + '&zoom=20&size=300x300&sensor=false" />';         
-        }
-
+        
+        //get name of location
+        geocoder.geocode({'location': latlng}, function(results, status) {
+          if (status === google.maps.GeocoderStatus.OK) {
+            if (results[1]) {
+              //window.alert(results[1].formatted_address);
+              document.getElementById('input-location').value = results[1].formatted_address;
+             } else {
+              window.alert('No results found');
+            }
+          } else {
+            window.alert('Geocoder failed due to: ' + status);
+          }
+        });
+        //geocode reverse end
+      }
         function errorCallback(e) {
           alert(e);
         }
+
+        
+
       } else {
         alert("Geolocation is not supported by this browser.");
       }
@@ -77,11 +96,13 @@ var defaultInput=function(){
   
     //Credit: https://www.youtube.com/watch?v=EPYnGFEcis4&feature=youtube_gdata_player
   function gotPic(event) {
+
     console.log("got Pic");
         if(event.target.files.length == 1 && 
-           event.target.files[0].type.indexOf("../img/") == 0) {
+           event.target.files[0].type.indexOf("image/") == 0) {
             $("#display-img").attr("src",URL.createObjectURL(event.target.files[0]));
-            console.log($("#display-img").URL);
+            var imgURL=URL.revokeObjectURL(URL.createObjectURL(event.target.files[0]));
+            console.log(imgURL);
         }
   }
   

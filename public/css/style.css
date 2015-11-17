@@ -873,3 +873,11 @@ li span{
 .margin-left-30{
    margin-left: 30px;
 }
+
+
+/***************************/
+/*take photo*/
+/***************************/
+#display-img{
+  width: 100%;
+}

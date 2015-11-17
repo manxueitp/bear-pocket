@@ -82,7 +82,7 @@
           <div class="col-sm-8 centered">
               <div id="map"></div>
               <span class="input input--minoru wow fadeInRight animated">
-                  <input class="input__field input__field--a" type="text" id="input-location" name="location"/>
+                  <input class="input__field input__field--a" type="text" id="input-location" name="location" value="NY,NewYork,10003"/>
                   <label class="input__label input__label--a" for="location">
                     <span class="input__label-content input__label-content--a"> Location </span>
                   </label>
@@ -129,9 +129,11 @@
         <!-- take photo -->
         <div class="row">
           <div class="col-sm-8">
-            <input type="file" capture="camera" accept="img/*" id="takePictureField"/>
-            <button class="btn-submit wow fadeInLeft animated" type="" id="btn-photo"><a>Take Photos</a></button>
+            <input type="file" capture="camera" accept="image/*" id="takePictureField"/>
             <img id="display-img">
+            <canvas></canvas>
+            <button class="btn-submit wow fadeInLeft animated" type="" id="btn-photo"><a>Take Photos</a></button>
+            
           </div>
           <div class="mypicture">
           </div>
