@@ -36,7 +36,7 @@ router.get('/', function(req, res) {
 // // respond with json data
   // res.json(jsonData)
 
-  res.render('index.html')
+  res.render('input.html')
 });
 
 // simple route to show an HTML page
