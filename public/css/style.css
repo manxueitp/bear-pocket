@@ -898,29 +898,54 @@ label > input + div{ /* IMAGE STYLES */
   height: 60px;
   display: block;
   border-radius: 50%;
+  -moz-box-shadow: 0 0 0 4px white, inset 0 2px 0 rgba(0, 0, 0, 0.08), 0 3px 0 4px rgba(0, 0, 0, 0.05);
+  -webkit-box-shadow: 0 0 0 4px white, inset 0 2px 0 rgba(0, 0, 0, 0.08), 0 3px 0 4px rgba(0, 0, 0, 0.05);
   box-shadow: 0 0 0 4px white, inset 0 2px 0 rgba(0, 0, 0, 0.08), 0 3px 0 4px rgba(0, 0, 0, 0.05);
 
 }
 label > input:checked + div{ /* (CHECKED) IMAGE STYLES */
    background: #032063;
+   box-shadow: 0 0 0 4px white, 0px 0px 10px 4px rgba(242,255,140,1);
    -webkit-box-shadow: 0 0 0 4px white, 0px 0px 10px 4px rgba(242,255,140,1);
    -moz-box-shadow: 0 0 0 4px white, 0px 0px 10px 4px rgba(242,255,140,1);
    box-shadow: 0 0 0 4px white, 0px 0px 10px 4px rgba(242,255,140,1);
+   -webkit-transition:all 1s;
    transition: all 1s;
 }
-
-label > .iconC{
+.categorywrap{
+  height: 64px;
+  position: relative;
+  display: block;
+}
+.categoryinput{
+  display:none;
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+.category{
+  text-align: center;
+  position: relative;
+  top: 0;
+  left: 0;
+  width: 60px;
+  height: 60px;
+  display: block;
+  border-radius: 50%;
+  -moz-box-shadow: 0 0 0 4px white, inset 0 2px 0 rgba(0, 0, 0, 0.08), 0 3px 0 4px rgba(0, 0, 0, 0.05);
+  -webkit-box-shadow: 0 0 0 4px white, inset 0 2px 0 rgba(0, 0, 0, 0.08), 0 3px 0 4px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 0 0 4px white, inset 0 2px 0 rgba(0, 0, 0, 0.08), 0 3px 0 4px rgba(0, 0, 0, 0.05);
+}
+.iconC{
   display: block;
   font-size: 24px;
   color: #fff;
   font-weight: 300;
   width: 24px;
   height: 24px;
-  position: relative;
-  left: 50%;
-  top: 50%;
-  margin-left: -12px;
-  margin-top: -12px;
+  position: absolute;
+  left: 30%;
+  top: 30%;
 }
 
 .margin-bottom-10 {
@@ -944,4 +969,3 @@ label > input[type=file]{ /* HIDE RADIO */
     border-bottom: 5px solid #2BB9A0;
     color: #032063;
 }
-

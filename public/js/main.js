@@ -125,7 +125,7 @@ function renderSpends(spends){
                     '<div class="col-sm-6 centered ">'+
                      '<img src='+spends[i].url+' width="400">'+
                     '</div>'+
-                    '<button class="btn-delete  .margin-top-5 deletebtn wow fadeInLeft animated" data-id="'+spends[i]._id+'" id="btn['+i+']"><a>Delete</a></button>'+
+                    '<button class="btn-delete margin-top-5 deletebtn wow fadeInLeft animated" data-id="'+spends[i]._id+'" id="btn['+i+']"><a>Delete</a></button>'+
                   '</div>'+
                 '</div>'+ 
               '</div> '+
