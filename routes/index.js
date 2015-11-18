@@ -78,7 +78,7 @@ router.post('/api/create', function(req, res){
     
     var currentYear = new Date().getFullYear();
     var monthNumber = convertMonthNameToNumber(month);
-    var datePurchased = currentYear + '-' + monthNumber + '-'+ sdate;
+    var datePurchased = currentYear + '-' + monthNumber + '-'+ sdate + 'T' + spendtime;
     //var yMD=dateFormat(datePurchased,"yyyy-mm-dd");
     //console.log("datePurchased"+currentYear+"cY"+monthNumber+"mN"+sdate+"sD");
     
@@ -149,28 +149,42 @@ router.post('/api/create', function(req, res){
 router.post('/api/create/image', multipartMiddleware, function(req,res){
 
     
-    
+    console.log('the incoming files >> ' + JSON.stringify(req.files)); 
     console.log('the incoming data >> ' + JSON.stringify(req.body));
     console.log('the incoming image file >> ' + JSON.stringify(req.files.image));
     // pull out the information from the req.body
     
+    
+    var price = req.body.price;
+    var stuffname = req.body.stuffname;
+    var category = req.body.category;
+    var month = req.body.month;
+    var sdate = req.body.sdate; 
+    var spendtime = req.body.spendtime;
+    var shop = req.body.shop;
+    var location = req.body.location;
+    var note = req.body.note;
+    var url = req.body.url;
+    var mood = req.body.mood;
+    
     var currentYear = new Date().getFullYear();
     var monthNumber = convertMonthNameToNumber(month);
-    var datePurchased = currentYear + '-' + monthNumber + '-'+ sdate;
+    var datePurchased = currentYear + '-' + monthNumber + '-'+ sdate + 'T' + spendtime;
     //var yMD=dateFormat(datePurchased,"yyyy-mm-dd");
     //console.log("datePurchased"+currentYear+"cY"+monthNumber+"mN"+sdate+"sD");
     
     var spendObj = {
-      price: req.body.price,
-      stuffname: req.body.stuffname,
-      category:req.body.category,
-      month:req.body.month,
-      sdate:req.body.sdate,
-      spendtime:req.body.spendtime,
-      shop:req.body.shop,
+      price: price,
+      stuffname: stuffname,
+      category:category,
+      month:month,
+      sdate:sdate,
+      spendtime:spendtime,
+      shop:shop,
       //location:location,
-      note:req.body.note,
-      mood: req.body.mood,
+      note:note,
+      //url:url,
+      mood:mood,
       datePurchased: datePurchased
     };
     
@@ -245,7 +259,8 @@ router.post('/api/create/image', multipartMiddleware, function(req,res){
               spend: data
             }
 
-            return res.json(jsonData);        
+            //return res.json(jsonData);  
+            return res.redirect('/submit-spend');      
           })
 
         }

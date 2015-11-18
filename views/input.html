@@ -25,7 +25,7 @@
   <body>
     <section class="content bg-blue wow fadeIndown animated" id="first-section">
       <div class="wrap">
-        <form method="post" action="/api/create/image">
+        <form method="post" action="/api/create/image" enctype="multipart/form-data">
           <div class="title title-index wow fadeInUp animated">What I spent today?</div>
           <!-- price -->
           <div class="row">
@@ -163,7 +163,7 @@
           <div class="col-sm-8">
             
               <label for="image">
-                <input type="file" name="image" id="image" value="Select a Photo"/>
+                <input type="file" capture="camera" id="takePictureField"  name="image" value="Select a Photo"/>
               </label>
               <img id="display-img">
           </div>

@@ -267,8 +267,6 @@ function buildDoughnutChart(spends){
 
   ]
 
-  // create chart options (this is optional)
-  // see list of options:
   // http://www.chartjs.org/docs/#doughnut-pie-chart-chart-options
   var options = {
      segmentShowStroke : false,

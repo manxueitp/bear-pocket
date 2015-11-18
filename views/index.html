@@ -5,7 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Calory Database</title>
-
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
     <!-- Custom Font -->
     <link href='http://fonts.googleapis.com/css?family=Raleway:200,500,700,800,900' rel='stylesheet' type='text/css'>
     <link href='https://fonts.googleapis.com/css?family=Bitter:400,700' rel='stylesheet' type='text/css'>
@@ -93,6 +93,9 @@
             </div>
            </div>
            
+
+          <!--Date-->
+
            
           <!-- Time -->
           <div class="row">
@@ -176,7 +179,7 @@
           <div class="col-sm-8">
             
               <label for="image">
-                <input type="file" capture="camera" accept="image/*" id="takePictureField" name="image" id="image" value="Select a Photo"/>
+                <input type="file" capture="camera" accept="image/*" name="image" id="image" value="Select a Photo"/>
               </label>
               <img id="display-img">
           </div>
@@ -195,8 +198,13 @@
   
   
 
+
+
+
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+  <script src="//code.jquery.com/jquery-1.10.2.js"></script>
   <script src="http://code.jquery.com/jquery-1.11.1.js"></script>
+  <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
   <script src="js/classie.js"></script> 
   <script src="js/dateformatting.js"></script> 
   <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&key=AIzaSyAcN6VtdpM55-CGGyEAWX2qEWs_Qwg4wXM"></script>    
@@ -205,6 +213,12 @@
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js" integrity="sha512-K1qjQ+NcF2TYO/eI3M6v8EiNYZfA95pQumfvcVrTHtwQVDG+aHRqLi/ETn2uB+1JqwYqVG3LIvdm9lj6imS/pQ==" crossorigin="anonymous"></script> 
      <!-- CHART JS -->
   <script src="js/Chart.js"></script>
+  <!-- time picker-->
+     <script>
+      $(function() {
+        $( "#datepicker" ).datepicker();
+      });
+    </script>
   <!-- input JS-->
     <script>
       (function() {

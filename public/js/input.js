@@ -8,7 +8,7 @@ var renderTime=function(){
   var month=dateFormat(now,"mmmm");
   var date= dateFormat(now,"dd");
   var year=dateFormat(now,"yyyy");
-  var time=dateFormat(now,"shortTime");
+  var time=dateFormat(now,"isoTime");
   document.getElementById('input-month').value = month;
   document.getElementById('input-sdate').value = date;
   document.getElementById('input-spendtime').value = time;
@@ -18,7 +18,7 @@ var renderTime=function(){
   console.log(year);
   console.log(time);
 }
-
+//----------------------------------------------------------Input Location-------------------------------
 var renderLocation=function(){
   if(navigator.geolocation){
      navigator.geolocation.watchPosition(successCallback, errorCallback, {});
