@@ -1,10 +1,12 @@
 var desiredWidth;
- var geocoder = new google.maps.Geocoder;
+var geocoder = new google.maps.Geocoder;
+var hasLocation = false;
+
 //----------------------------------------------------------default input -----------------------------------
 var renderTime=function(){
   var now=new Date();
   var month=dateFormat(now,"mmmm");
-  var date= dateFormat(now,"d");
+  var date= dateFormat(now,"dd");
   var year=dateFormat(now,"yyyy");
   var time=dateFormat(now,"shortTime");
   document.getElementById('input-month').value = month;
@@ -21,6 +23,9 @@ var renderLocation=function(){
   if(navigator.geolocation){
      navigator.geolocation.watchPosition(successCallback, errorCallback, {});
      function successCallback(currentPosition) {
+        if (hasLocation) return false;
+
+        hasLocation = true;
         //alert("reading user's current location");
         
         var lat = currentPosition.coords.latitude,

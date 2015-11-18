@@ -25,7 +25,7 @@
   <body>
     <section class="content bg-blue wow fadeIndown animated" id="first-section">
       <div class="wrap">
-        <form method="post" action="/api/create">
+        <form method="post" action="/api/create/image">
           <div class="title title-index wow fadeInUp animated">What I spent today?</div>
           <!-- price -->
           <div class="row">
@@ -157,25 +157,13 @@
               </span>
           </div> 
         </div>
-
-        <!-- Image -->
-        <!-- <div class="row"> -->
-          <!-- <div class="col-sm-8 centered"> -->
-              <!-- <span class="input input--minoru wow fadeInRight animated"> -->
-                  <!-- <input class="input__field input__field--a" type="text" id="input-url" name="url"/> -->
-                 <!--  <label class="input__label input__label--a" for="url"> -->
-                   <!--  <span class="input__label-content input__label-content--a"> Image </span> -->
-                 <!--  </label> -->
-              <!-- </span> -->
-          <!-- </div>  -->
-        <!-- </div>  -->
         
         <!-- take photo -->
         <div class="row">
           <div class="col-sm-8">
             
               <label for="image">
-                <input type="file" capture="camera" accept="image/*" id="takePictureField" name="image" id="image" value="Select a Photo"/>
+                <input type="file" name="image" id="image" value="Select a Photo"/>
               </label>
               <img id="display-img">
           </div>

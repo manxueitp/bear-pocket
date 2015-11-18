@@ -34,7 +34,7 @@ var renderPlaces = function() {
       markers = [];
       
 
-      // now, loop through the animals and add them as markers to the map
+      
       for(var i=0;i<spends.length;i++){
 
         var latLng = {

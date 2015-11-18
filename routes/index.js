@@ -2,9 +2,29 @@ var express = require('express');
 var router = express.Router();
 var mongoose = require('mongoose');
 var geocoder = require('geocoder'); // geocoder library
+var moment = require('moment');
+var fs=require('fs');
+//var multer  = require('multer'); 
+
+moment().format();
 
 // our db model
 var Spend = require("../models/spend.js");
+
+// S3 File dependencies
+var AWS = require('aws-sdk');
+var awsBucketName = process.env.AWS_BUCKET_NAME;
+var s3Path = process.env.AWS_S3_PATH; // TODO - we shouldn't hard code the path, but get a temp URL dynamically using aws-sdk's getObject
+AWS.config.update({
+  accessKeyId: process.env.AWS_ACCESS_KEY,
+  secretAccessKey: process.env.AWS_SECRET_KEY
+});
+var s3 = new AWS.S3();
+
+// file processing dependencies
+var fs = require('fs');
+var multipart = require('connect-multiparty');
+var multipartMiddleware = multipart();
 
 //-------------------------------------------------------------------------------
 router.get('/', function(req, res) {
@@ -28,6 +48,10 @@ router.get('/submit-spend', function(req,res){
   res.render('result.html')
 })
 
+router.get('/add-with-image', function(req,res){
+  res.render('input.html')
+
+})
 
 
 // /**-----------------------------------------------------------------------------//
@@ -54,7 +78,9 @@ router.post('/api/create', function(req, res){
     
     var currentYear = new Date().getFullYear();
     var monthNumber = convertMonthNameToNumber(month);
-    var datePurchased = new Date(currentYear + '-' + monthNumber + '-'+ sdate);
+    var datePurchased = currentYear + '-' + monthNumber + '-'+ sdate;
+    //var yMD=dateFormat(datePurchased,"yyyy-mm-dd");
+    //console.log("datePurchased"+currentYear+"cY"+monthNumber+"mN"+sdate+"sD");
     
     var spendObj = {
       price: price,
@@ -118,6 +144,137 @@ router.post('/api/create', function(req, res){
 
     }); 
 });
+// /**----api/create/image-------------------------------------------------------------------------//
+
+router.post('/api/create/image', multipartMiddleware, function(req,res){
+
+    
+    
+    console.log('the incoming data >> ' + JSON.stringify(req.body));
+    console.log('the incoming image file >> ' + JSON.stringify(req.files.image));
+    // pull out the information from the req.body
+    
+    var currentYear = new Date().getFullYear();
+    var monthNumber = convertMonthNameToNumber(month);
+    var datePurchased = currentYear + '-' + monthNumber + '-'+ sdate;
+    //var yMD=dateFormat(datePurchased,"yyyy-mm-dd");
+    //console.log("datePurchased"+currentYear+"cY"+monthNumber+"mN"+sdate+"sD");
+    
+    var spendObj = {
+      price: req.body.price,
+      stuffname: req.body.stuffname,
+      category:req.body.category,
+      month:req.body.month,
+      sdate:req.body.sdate,
+      spendtime:req.body.spendtime,
+      shop:req.body.shop,
+      //location:location,
+      note:req.body.note,
+      mood: req.body.mood,
+      datePurchased: datePurchased
+    };
+    
+    // location thing
+    if(!location) return res.json({status:'ERROR', message: 'You are missing a required field or have submitted a malformed request.'})
+
+    geocoder.geocode(location, function (err,data) {
+
+      if (!data || data==null || err || data.status == 'ZERO_RESULTS'){
+        var error = {status:'ERROR', message: 'Error finding location'};
+        return res.json({status:'ERROR', message: 'You are missing a required field or have submitted a malformed request.'})
+      }
+
+      var lon = data.results[0].geometry.location.lng;
+      var lat = data.results[0].geometry.location.lat;
+  
+      spendObj.location = {
+        geo: [lon,lat], 
+        name: data.results[0].formatted_address 
+      }
+     // -----location 
+     
+     //image thing (file)
+      var filename = req.files.image.name; // actual filename of file
+      var path = req.files.image.path; // will be put into a temp directory
+      var mimeType = req.files.image.type; // image/jpeg or actual mime type
+
+      var cleanedFileName = cleanFileName(filename);
+      fs.readFile(path, function(err, file_buffer){
+
+      // reference to the Amazon S3 Bucket
+      var s3bucket = new AWS.S3({params: {Bucket: awsBucketName}});
+      
+      // Set the bucket object properties
+      // Key == filename
+      // Body == contents of file
+      // ACL == Should it be public? Private?
+      // ContentType == MimeType of file ie. image/jpeg.
+      var params = {
+        Key: cleanedFileName,
+        Body: file_buffer,
+        ACL: 'public-read',
+        ContentType: mimeType
+      };
+
+        // Put the above Object in the Bucket
+      s3bucket.putObject(params, function(err, data) {
+        if (err) {
+          console.log(err)
+          return;
+        } else {
+          console.log("Successfully uploaded data to s3 bucket");
+
+          // now that we have the image
+          // we can add the s3 url our spend object from above
+          spendObj['url'] = s3Path + cleanedFileName;
+          console.log(spendObj['url']);
+         
+          var spend = new Spend(spendObj);
+
+          spend.save(function(err,data){
+            if(err){
+              var error = {
+                status: "ERROR",
+                message: err
+              }
+              return res.json(err)
+            }
+
+            var jsonData = {
+              status: "OK",
+              spend: data
+            }
+
+            return res.json(jsonData);        
+          })
+
+        }
+
+      }); // end of putObject function
+     });// end of read file
+
+    })//location end (file)
+  })
+
+function cleanFileName (filename) {
+    
+    // cleans and generates new filename for example userID=abc123 and filename="My Pet Dog.jpg"
+    // will return "abc123_my_pet_dog.jpg"
+    var fileParts = filename.split(".");
+    
+    //get the file extension
+    var fileExtension = fileParts[fileParts.length-1]; //get last part of file
+    
+    //add time string to make filename a little more random
+    d = new Date();
+    timeStr = d.getTime();
+    
+    //name without extension
+    newFileName = fileParts[0];
+    
+    return newFilename = timeStr + "_" + fileParts[0].toLowerCase().replace(/[^\w ]+/g,'').replace(/ +/g,'_') + "." + fileExtension;
+    
+}
 //------------------------------------------------------------------------------------------//
 
 function convertMonthNameToNumber(monthName) {
@@ -125,12 +282,38 @@ function convertMonthNameToNumber(monthName) {
     var monthDigit = myDate.getMonth();
     return isNaN(monthDigit) ? 0 : (monthDigit + 1);
 }
-
+//------------------------------------------------------------------------------------------//
 router.get('/api/get', function(req, res){
+  
+  Spend.find(function(err, data){
+    // if err or no animals found, respond with error 
+    if(err || data == null){
+      var error = {
+        status:'ERROR',
+        message: 'Could not find spend'
+      }
+      return res.json(error);
+    }
 
-  var date = req.query.date;
-  // mongoose method to find all, see http://mongoosejs.com/docs/api.html#model_Model.find
-  Spend.find().sort('datePurchased').exec(function(err, data){
+    var jsonData = {
+      status: 'OK',
+      spends: data
+    } 
+
+    return res.json(jsonData);
+
+  })
+
+})
+//------------------------------------------------------------------------------------------//
+router.get('/api/get/:datePurchased', function(req, res){
+
+  //var date = req.query.date;
+  var requestedDate = req.params.datePurchased;
+  console.log(requestedDate);
+  //Spend.find().sort('datePurchased').exec(function(err, data){
+    // if err or no animals found, respond with error 
+  Spend.find({datePurchased:requestedDate},function(err,data){
     // if err or no animals found, respond with error 
     if(err || data == null){
       var error = {
@@ -280,7 +463,7 @@ router.post('/api/update/:id', function(req, res){
       console.log('updated the spend!');
       console.log(data);
 
-      // now return the json data of the new person
+      // now return the json data of the new spend
       var jsonData = {
         status: 'OK',
         spend: data
