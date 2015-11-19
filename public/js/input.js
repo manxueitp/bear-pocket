@@ -9,6 +9,7 @@ var renderTime=function(){
   var date= dateFormat(now,"dd");
   var year=dateFormat(now,"yyyy");
   var time=dateFormat(now,"isoTime");
+  var today=dateFormat(now,"isoDate");
   document.getElementById('input-month').value = month;
   document.getElementById('input-sdate').value = date;
   document.getElementById('input-spendtime').value = time;
@@ -110,9 +111,14 @@ var defaultInput=function(){
             console.log(imgURL);
         }
   }
-  
+   
+  function changeBar(){
+    var changeValue = this.value*10+'% Happy';
+    $(this).next().text(changeValue);   
+  }
 
 //----------------------------------------------------------call function-------------------------
 
 window.addEventListener('load', defaultInput());
 $("#takePictureField").on("change",gotPic);
+$("#input-mood").on("change",changeBar);

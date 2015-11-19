@@ -15,7 +15,7 @@ a{
 
 }
 .content {
-  margin: 0px;
+  margin-top: 80px;
   padding: 0px;
   overflow: hidden;
 }
@@ -29,15 +29,15 @@ a{
 }
 
 .title-index{
-   font-size: 42px;
+   font-size: 22px;
 }
 
 .wrap{
-  margin-top: 1em;
-  margin: 10em 12em 18em 12em;
+    margin-top: 1em;
+    margin: 2em 4em;
 
 }
-@media screen and (max-width: 414px) {
+@media screen and (max-width: 500px) {
   .wrap{
     margin: 3em 2em 6em 2em;
   }
@@ -207,6 +207,7 @@ a{
   font-size: 16px;
   float: right;
   margin-right: 10px;
+  margin-top: 16px;
 }
 
 
@@ -496,28 +497,31 @@ a{
   padding-top:40px;
   margin-top: 80px;
  }
+ .imgbar{
+  width: 30%;
+  height:30%;
+  float: left;
+ }
  .purple-bar{
-  position: relative;
-  background: #E6E8EB;
-  height: 300px;
-  width: 34px;
-  text-align: center;
-  border-left: 1px solid rgba(255,255,255,0.1);
-  border-right: 1px solid rgba(255,255,255,0.1);
+    position: relative;
+    float: left;
+    background: #E6E8EB;
+    height: 10px;
+    margin: 10px;
+    margin-top: 30px;
+    padding-top: 14px;
+    width: 60%;
+    text-align: center;
+    border-left: 1px solid rgba(255,255,255,0.1);
+    border-right: 1px solid rgba(255,255,255,0.1);
 }
  .purple-bar-container{
   position: absolute;
-  background: #fbf322;
+  background: #FFD53B;
   bottom: 0;
-  width: 100%;
-  height: 0%;
-  border-top: 6px solid #F3E10E;
-  /*-webkit-transition: height 6s; 
-  -moz-transition: height 6s; 
-  transition:height 6s;
-  transition: all .3s .3s ease-out;
-  -webkit-transition-delay: 5s; 
-  transition-delay: 5s;*/
+  width: 0%;
+  height: 100%;
+  border-top: 10px solid #fbf322;
  }
 
   .purple-bar-container_hover{
@@ -710,6 +714,30 @@ input:focus::-ms-input-placeholder {
   
 }
 
+
+.slider-bar{
+  border: 0;
+  background-color: #042164;
+  border-radius: 0px;
+  height: 8px;
+  cursor: pointer;
+  -webkit-appearance: none;
+}
+
+.slider{
+  margin-bottom:40px;
+}
+.bar{
+  margin-top:14px;
+  margin-bottom: 14px;
+}
+.value {
+    display: inline-block;
+    font-family: 'Sintony', sans-serif;
+    font-weight: 700;
+    font-size: 18px;
+    color: #042164
+}
 /***************************/
 /* Default Form Input Code */
 /***************************/
@@ -753,10 +781,12 @@ h1{
     font-size: 3.6em;
     font-weight: 700;
     width: 100%;
-    padding: 40px 40px 40px 160px;
+    padding: 20px;
+    margin: 0px;
 }
 /* IMPORTANT - must give map div height */
-#map-canvas { height:400px; }
+#map-canvas { height:400px; 
+margin-top: 80px;}
 
 /* IMPORTANT - fixes webkit infoWindow rendering */
 #map-canvas img { max-width: none; }
@@ -777,10 +807,12 @@ h1{
 }
 
 .price-words{
-      font-size: 40px;
+    font-size: 40px;
     margin-bottom: 10px;
+    margin-top: 10px;
     font-weight: 700;
     line-height: 32px;
+    clear: both;
 }
 
 .btn-submit-2{
@@ -861,7 +893,7 @@ li span{
   background: #415177;
   width: 100%;
   height: 500px;
-  padding-left: 200px;
+  padding: 12px;
 }
 .margin-left-30{
    margin-left: 30px;
@@ -953,12 +985,68 @@ label > input[type=file]{ /* HIDE RADIO */
     font-weight: 700;
     display: block;
     color: #032063;
-    background: #3fc5ad;
+    background: #75D4F7;
     padding: 16px 28px;
     line-height: 20px;
     font-weight: 600;
     font-size: 20px;
     text-align: center;
-    border-bottom: 5px solid #2BB9A0;
+    border-bottom: 5px solid #59CCF7;
+    border-radius: 4px;
     color: #032063;
 }
+/***************************/
+/*see month*/
+/***************************/
+.btn-p{
+    
+    width: 100%;
+    height: 100%;
+    text-decoration: none;
+    font-weight: 700;
+    display: block;
+    color: #ffbf3b;
+    background: #ffe44e;
+    padding: 16px 28px;
+    line-height: 20px;
+    font-weight: 600;
+    font-size: 20px;
+    text-align: center;
+    border-bottom: 5px solid #ffbf3b;
+    border-radius: 4px;
+    color: #032063;
+}
+/***************************/
+/*board view*/
+/***************************/
+.moodbar{
+  display: block;
+  float: right;
+  width: 0px;
+  height: 10px;
+  margin: 6px;
+}
+
+.margin-bottom-10{
+  margin-bottom: 10px;
+}
+
+/***************************/
+/*menu view*/
+/***************************/
+.topbar{
+ position: fixed;
+  top: 0px;
+  width: 100%;
+  z-index: 2;
+  height: 80px;
+  background: #FFE44E;
+  text-align: center;
+  font-size: 36px;
+  padding-top: 12px;
+  color: #032063;
+  font-weight: 900;
+  border-bottom: 5px solid #FFBF3B;
+}
+
+

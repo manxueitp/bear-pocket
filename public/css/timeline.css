@@ -190,6 +190,16 @@ header h1 {
   margin-left: -12px;
   margin-top: -12px;
 }
+@media screen and (max-width: 500px) {
+  .cd-timeline-content .cd-date {
+    margin-left: 30px;
+    float: none;
+    font-size: 10px;
+    padding: 0.8em 0;
+    opacity: .7;
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+}
 @media only screen and (min-width: 1170px) {
   .cd-timeline-img {
     width: 60px;
@@ -270,7 +280,7 @@ header h1 {
 }
 .cd-timeline-content {
   position: relative;
-  margin-left: 30%;
+  margin-left: 20%;
   background: white;
   border-radius: 0.25em;
   padding: 1em;

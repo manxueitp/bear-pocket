@@ -41,11 +41,15 @@ router.get('/', function(req, res) {
 
 // simple route to show an HTML page
 router.get('/add-spend', function(req,res){
-  res.render('index.html')
+  res.render('input.html')
 })
 
 router.get('/submit-spend', function(req,res){
   res.render('result.html')
+})
+
+router.get('/search-month', function(req,res){
+  res.render('month.html')
 })
 
 router.get('/add-with-image', function(req,res){
@@ -93,7 +97,8 @@ router.post('/api/create', function(req, res){
       url:url,
       mood:mood,
       timePurchased: timePurchased,
-      datePurchased: datePurchased
+      datePurchased: datePurchased,
+      monthPurchased: monthPurchased
     };
     
     // location thing
@@ -167,9 +172,11 @@ router.post('/api/create/image', multipartMiddleware, function(req,res){
     var mood = req.body.mood;
     
     var currentYear = new Date().getFullYear();
+ 
     var monthNumber = convertMonthNameToNumber(month);
-    var timePurchased = currentYear + '-' + monthNumber + '-'+ sdate + 'T' + spendtime;
+    var timePurchased = currentYear + '-' + monthNumber + '-'+ sdate + 'T' + spendtime + '.000Z';
     var datePurchased = currentYear + '-' + monthNumber + '-'+ sdate;
+    var monthPurchased = currentYear + '-' + monthNumber;
     
     var spendObj = {
       price: price,
@@ -184,7 +191,8 @@ router.post('/api/create/image', multipartMiddleware, function(req,res){
       //url:url,
       mood:mood,
       timePurchased: timePurchased,
-      datePurchased: datePurchased
+      datePurchased: datePurchased,
+      monthPurchased: monthPurchased
     };
     
     // location thing
@@ -517,10 +525,11 @@ router.get('/api/delete/:id', function(req, res){
 
 })
 
+// /api/search?datePurchased=2015-11-18
 //-----------------query-------------------------------------------------------------//
-router.get('/api/get/query',function(req,res){
+router.get('/api/search',function(req,res){
 
-  console.log(req.query);
+  console.log('the query is ' + req.query.datePurchased);
 
   var searchQuery = {};
 
@@ -532,6 +541,14 @@ router.get('/api/get/query',function(req,res){
     searchQuery['timePurchased'] =  req.query.timePurchased
   }
 
+  if(req.query.monthPurchased){
+    searchQuery['monthPurchased'] =  req.query.monthPurchased
+  }
+  
+  if(req.query.sdate){
+    searchQuery['sdate'] =  req.query.sdate
+  }
+
   if(req.query.category){
     searchQuery['category'] =  req.query.category
   }  
@@ -540,10 +557,9 @@ router.get('/api/get/query',function(req,res){
   //   res.json(data);
   // })
 
-  Spend.find(searchQuery).sort('timePurchased').exec(function(err,data){
+  Spend.find(searchQuery,function(err,data){
     res.json(data);
-  })  
-
+  })
 
 })
 

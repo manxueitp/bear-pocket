@@ -23,6 +23,7 @@
   
 
   <body>
+    <div class=topbar>Pocket-map</div>
     <section class="content bg-blue wow fadeIndown animated" id="first-section">
       <div class="wrap">
         <form method="post" action="/api/create/image" enctype="multipart/form-data">
@@ -147,14 +148,22 @@
         </div>
 
         <!-- Mood -->
-        <div class="row">
-          <div class="col-sm-8 centered">
-              <span class="input input--minoru wow fadeInRight animated">
-                  <input class="input__field input__field--a" type="text" id="input-mood" name="mood"/>
-                  <label class="input__label input__label--a" for="mood">
-                    <span class="input__label-content input__label-content--a"> Mood </span>
-                  </label>
-              </span>
+        <div class="row slider">
+          <div class="col-sm-10 col-xs-12 centered">
+           
+            <div class="col-sm-2 col-xs-4 centered">
+              <img src="img/angry.png">
+            </div>
+            <div class="col-sm-6 col-xs-4 centered bar">
+            </div>
+            <div class="col-sm-2 col-xs-4 centered">
+              <img src="img/happy.png">
+            </div>
+            <div class="col-sm-10 col-xs-12 centered bar">
+              <input type="range" min="0" max="10" step="1" value="10" id="input-mood" name="mood" class="slider-bar wow fadeInRight animated">
+              <div id="input-mood-value" class="value">100% Happy</div>
+            </div>
+           
           </div> 
         </div>
         

@@ -2,6 +2,15 @@
 var map; // global map variable
 var markers = []; // array to hold map markers
 var icon;
+var now=new Date();
+var month=dateFormat(now,"mmmm");
+var date= dateFormat(now,"dd");
+var year=dateFormat(now,"yyyy");
+var time=dateFormat(now,"isoTime");
+var today=dateFormat(now,"isoDate");
+var nowmonth = dateFormat(now,"m");
+var priceTotalMonth=[];
+//var happypointTotal=0;
 
 function init() {
   
@@ -13,27 +22,118 @@ function init() {
 
   map = new google.maps.Map(document.getElementById("map-canvas"), mapOptions);
   
-  renderPlaces();
+  //showMonthValue(nowmonth);
+  getData(today);
+  //renderPlaces();
 }
 
-
-//----------------------------------------------------------google map show places-----------------------------------
-var renderPlaces = function() {
-  var infowindow =  new google.maps.InfoWindow({
-      content: ''
-  });
-
-  jQuery.ajax({
-    url : '/api/get/'+time,
+var getData = function(date){
+   jQuery.ajax({
+    url : '/api/get/'+date,
     dataType : 'json',
     success : function(response) {
       console.log(response);
       var spends = response.spends;
-      // first clear any existing markers, because we will re-add below
+
+      renderPlaces(spends);
+    }
+  })  
+}
+
+//--------------------------------------------------------------searchDate-----------------------------------------
+var showMonth=function(month){
+  var datenum=daysInMonth(month,year);
+  //console.log(datenum);
+  var searchmP=year+'-'+month;
+  var counter = 0;
+  var dateInMonth=[01,02,03,04,05,06,07,08,09,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31];
+  var monthDate=[];
+  
+  var newdate=parseInt(date);
+  //console.log(newdate);
+  //console.log(dateInMonth[2]);
+  
+  for (var i = 0; i < newdate; i++) {
+    var dataOfMonth={};
+    dataOfMonth['date']=dateInMonth[i];
+    var priceTotal=0;
+  $.getJSON('api/search?monthPurchased='+searchmP+'&sdate='+ dateInMonth[i] , function(data) {
+    //console.log(data);
+    
+    dataOfMonth['purchasedAmount']=data.length;
+    var priceTotal=0;
+    for(var j=0; j<data.length;j++){
+        priceTotal+=data[j].price;
+        
+      }
+    //console.log(priceTotal);
+    dataOfMonth['purchasedValue']=priceTotal;
+    priceTotalMonth.push(priceTotal);
+    monthDate.push(dataOfMonth);
+    counter++
+    if(counter==(newdate-1)) {console.log();}
+    //console.log(monthDate);
+    });
+     //console.log(priceTotalMonth);
+  } 
+}
+function renderMonthData(){
+
+}
+function daysInMonth(month,year) {
+    return new Date(year, month, 0).getDate();
+}
+//----------------------------------------------------------show month-----------------------------------
+var showMonthValue=function(month){
+  var datenum=daysInMonth(month,year);
+  //console.log(datenum);
+  var searchmP=year+'-'+month;
+  var counter = 0;
+  var dateInMonth=[01,02,03,04,05,06,07,08,09,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31];
+  var monthDate=[];
+  
+  var newdate=parseInt(date);
+  //console.log(newdate);
+  //console.log(dateInMonth[2]);
+  
+  $.getJSON('api/search?monthPurchased='+searchmP, function(data) {
+    console.log(data);
+    var priceOnDate=0;
+    for(i=0;i<=data.length;i++){
+      for(j=0; j<=dateInMonth.length; j++)
+        if(data[i].sdate==dateInMonth[j]){
+             priceOnDate+=data[i].price;  
+        }
+      priceTotalMonth.push(priceOnDate);
+      console.log(priceTotalMonth);
+    }
+    
+
+    });
+     
+   
+}
+function renderMonthData(){
+
+}
+
+//----------------------------------------------------------google map show places-----------------------------------
+var renderPlaces = function(spends) {
+  var infowindow =  new google.maps.InfoWindow({
+      content: ''
+  });
+
+  //console.log(today);
+
+  // jQuery.ajax({
+  //   url : '/api/get/'+today,
+  //   dataType : 'json',
+  //   success : function(response) {
+  //     console.log(response);
+  //     var spends = response.spends;
+  //     // first clear any existing markers, because we will re-add below
       clearMarkers();
       markers = [];
-      
-
       
       for(var i=0;i<spends.length;i++){
 
@@ -57,10 +157,11 @@ var renderPlaces = function() {
       renderSpends(spends);
       setChartDefaults();
       buildDoughnutChart(spends);
-
-    }
-  })
-};
+  
+  
+  //    }
+  // })
+}
 var bindInfoWindow = function(marker, map, infowindow, html) {
     google.maps.event.addListener(marker, 'click', function() {
         infowindow.setContent(html);
@@ -79,7 +180,7 @@ function renderSpends(spends){
   
       for(var i=0;i<spends.length;i++){
 
-        console.log('hello');
+        
 
           if(spends[i].category=="eating"){
             icon= "fa-cutlery";
@@ -106,7 +207,8 @@ function renderSpends(spends){
           else{
            icon= "fa-cullery";
           }
-
+          var happypoint= spends[i].mood*10;
+          
           var htmlToAdd= '<div class="cd-timeline-block wow fadeInUp animated">'+
                 '<div class="cd-timeline-img'+ ' cd-'+spends[i].category+' cd-timeline-block wow fadeInLeft animated">'+
                   '<i class="fa '+icon+' icon"></i>'+
@@ -114,16 +216,16 @@ function renderSpends(spends){
 
                 '<div class="cd-timeline-content">'+
                   '<div class="row">'+
-                  '<span class="cd-date">'+spends[i].month+'.'+spends[i].sdate+'<br/>'+spends[i].spendtime+':00'+'</span>'+
+                  '<span class="cd-date">'+spends[i].month+'.'+spends[i].sdate+'<br/>'+spends[i].spendtime+'</span>'+
                     '<div class="col-sm-6 words">'+
                     '<h1 class="price-words">$'+spends[i].price+'</h1>'+
-                    '<h1>'+spends[i].stuffname+'</h1>'+
-                    '<p>'+spends[i].shop+'</p>'+
+                    '<div><img class="imgbar" src=img/happy.png><div class="purple-bar"><div class="purple-bar-container" id="bar'+[i]+'" style="width: 0%;"></div></div><h1>'+happypoint+'% Happiness'+'</h1></div>'+
+                    '<p>'+spends[i].note+'</p>'+
                     '<p>'+spends[i].location.name+'</p>'
                     +'</div>'+
                     
                     '<div class="col-sm-6 centered ">'+
-                     '<img src='+spends[i].url+' width="400">'+
+                     '<img class="margin-bottom-10" src='+spends[i].url+' width="400">'+
                     '</div>'+
                     '<button class="btn-delete margin-top-5 deletebtn wow fadeInLeft animated" data-id="'+spends[i]._id+'" id="btn['+i+']"><a>Delete</a></button>'+
                   '</div>'+
@@ -132,10 +234,8 @@ function renderSpends(spends){
             '</div>'+
             '</div>';
 
-            jQuery("#cd-timeline").append(htmlToAdd);
-
-            console.log(htmlToAdd);
-
+          jQuery("#cd-timeline").append(htmlToAdd);
+           $('#bar' + [i]).css('width', happypoint + '%');
       }
 //----------------------------------------------------------------------
       for(var i=0;i<spends.length;i++){
@@ -158,11 +258,10 @@ function renderSpends(spends){
         $.get('/api/delete/' + id);
         $(this).parent().remove();
      })
-    
-  //}
-  //})  
+     
 }
 
+//----------------------------see other month----------------------------------------
 
 //--------------chart----------------------------------
 
@@ -196,7 +295,7 @@ function buildDoughnutChart(spends){
     }else if(spends[i].category=='food') {
       foodTotal+=spends[i].price;
     }
-    else if(spends[i].category=='eatingTotal') {
+    else if(spends[i].category=='eating') {
       eatingTotal+=spends[i].price;
     }
     else if(spends[i].category=='rental'){
@@ -296,3 +395,4 @@ function renderCounts(eatingTotal,drinkTotal){
 //document.getElementById('btn-photo').addEventListener('click', renderFoods);
 
 google.maps.event.addDomListener(window, 'load', init);
+document.getElementById('see-month').addEventListener('click', showMonth(nowmonth));
