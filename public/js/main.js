@@ -24,7 +24,7 @@ var renderPlaces = function() {
   });
 
   jQuery.ajax({
-    url : '/api/get',
+    url : '/api/get/'+time,
     dataType : 'json',
     success : function(response) {
       console.log(response);
@@ -73,7 +73,7 @@ function clearMarkers(){
     markers[i].setMap(null); // clears the markers
   } 
 }
-
+//--------------------------------------------render spend----------------------------------------------
 function renderSpends(spends){
   
   

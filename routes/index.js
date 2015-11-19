@@ -78,9 +78,7 @@ router.post('/api/create', function(req, res){
     
     var currentYear = new Date().getFullYear();
     var monthNumber = convertMonthNameToNumber(month);
-    var datePurchased = currentYear + '-' + monthNumber + '-'+ sdate + 'T' + spendtime;
-    //var yMD=dateFormat(datePurchased,"yyyy-mm-dd");
-    //console.log("datePurchased"+currentYear+"cY"+monthNumber+"mN"+sdate+"sD");
+    var timePurchased = currentYear + '-' + monthNumber + '-'+ sdate + 'T' + spendtime;
     
     var spendObj = {
       price: price,
@@ -94,6 +92,7 @@ router.post('/api/create', function(req, res){
       note:note,
       url:url,
       mood:mood,
+      timePurchased: timePurchased,
       datePurchased: datePurchased
     };
     
@@ -169,9 +168,8 @@ router.post('/api/create/image', multipartMiddleware, function(req,res){
     
     var currentYear = new Date().getFullYear();
     var monthNumber = convertMonthNameToNumber(month);
-    var datePurchased = currentYear + '-' + monthNumber + '-'+ sdate + 'T' + spendtime;
-    //var yMD=dateFormat(datePurchased,"yyyy-mm-dd");
-    //console.log("datePurchased"+currentYear+"cY"+monthNumber+"mN"+sdate+"sD");
+    var timePurchased = currentYear + '-' + monthNumber + '-'+ sdate + 'T' + spendtime;
+    var datePurchased = currentYear + '-' + monthNumber + '-'+ sdate;
     
     var spendObj = {
       price: price,
@@ -185,6 +183,7 @@ router.post('/api/create/image', multipartMiddleware, function(req,res){
       note:note,
       //url:url,
       mood:mood,
+      timePurchased: timePurchased,
       datePurchased: datePurchased
     };
     
@@ -326,9 +325,13 @@ router.get('/api/get/:datePurchased', function(req, res){
   //var date = req.query.date;
   var requestedDate = req.params.datePurchased;
   console.log(requestedDate);
-  //Spend.find().sort('datePurchased').exec(function(err, data){
+  
+  //Spend.find().sort('-timePurchased').exec(function(err, data){
     // if err or no animals found, respond with error 
-  Spend.find({datePurchased:requestedDate},function(err,data){
+  Spend
+    .find({datePurchased:requestedDate})
+    .sort('-timePurchased')
+    .exec(function(err,data){
     // if err or no animals found, respond with error 
     if(err || data == null){
       var error = {
@@ -342,11 +345,12 @@ router.get('/api/get/:datePurchased', function(req, res){
       status: 'OK',
       spends: data
     } 
-
+    
+    
     return res.json(jsonData);
+    
 
   })
-
 })
 
 // _______________________________________________________________________________________/**
@@ -512,5 +516,37 @@ router.get('/api/delete/:id', function(req, res){
   })
 
 })
+
+//-----------------query-------------------------------------------------------------//
+router.get('/api/get/query',function(req,res){
+
+  console.log(req.query);
+
+  var searchQuery = {};
+
+  if(req.query.datePurchased){
+    searchQuery['datePurchased'] =  req.query.datePurchased
+  }
+
+  if(req.query.timePurchased){
+    searchQuery['timePurchased'] =  req.query.timePurchased
+  }
+
+  if(req.query.category){
+    searchQuery['category'] =  req.query.category
+  }  
+
+  // Spend.find(searchQuery,function(err,data){
+  //   res.json(data);
+  // })
+
+  Spend.find(searchQuery).sort('timePurchased').exec(function(err,data){
+    res.json(data);
+  })  
+
+
+})
+
+//------------------------------------------------------------------------------//
 
 module.exports = router;

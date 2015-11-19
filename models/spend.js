@@ -17,8 +17,9 @@ var spendSchema= new Schema({
 	note: String,
 	url: String,
 	mood: String,
-	datePurchased: Date,
-	dateAdded : { type: Date, default: Date.now },
+	timePurchased: Date,
+	datePurchased:String,
+    dateAdded : { type: Date, default: Date.now },
 })
 
 module.exports = mongoose.model('Spend',spendSchema);
