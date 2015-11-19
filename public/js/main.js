@@ -22,7 +22,7 @@ function init() {
 
   map = new google.maps.Map(document.getElementById("map-canvas"), mapOptions);
   
-  //showMonthValue(nowmonth);
+  //showMonth(nowmonth);
   getData(today);
   //renderPlaces();
 }
@@ -46,38 +46,89 @@ var showMonth=function(month){
   //console.log(datenum);
   var searchmP=year+'-'+month;
   var counter = 0;
-  var dateInMonth=[01,02,03,04,05,06,07,08,09,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31];
+  var dateInMonth=['01','02','03','04','05','06','07','08','09','10','11','12','13','14','15','16','17','18','19','20','21','22','23','24','25','26','27','28','29','30','31'];
   var monthDate=[];
   
   var newdate=parseInt(date);
   //console.log(newdate);
   //console.log(dateInMonth[2]);
-  
-  for (var i = 0; i < newdate; i++) {
-    var dataOfMonth={};
-    dataOfMonth['date']=dateInMonth[i];
-    var priceTotal=0;
-  $.getJSON('api/search?monthPurchased='+searchmP+'&sdate='+ dateInMonth[i] , function(data) {
-    //console.log(data);
-    
-    dataOfMonth['purchasedAmount']=data.length;
-    var priceTotal=0;
-    for(var j=0; j<data.length;j++){
-        priceTotal+=data[j].price;
-        
-      }
-    //console.log(priceTotal);
-    dataOfMonth['purchasedValue']=priceTotal;
-    priceTotalMonth.push(priceTotal);
-    monthDate.push(dataOfMonth);
-    counter++
-    if(counter==(newdate-1)) {console.log();}
-    //console.log(monthDate);
-    });
-     //console.log(priceTotalMonth);
-  } 
+
+  var dataOfMonth=[];
+  var newCounter = 0;
+
+  getDateData(0);
+  // for (var i = 0; i < newdate; i++) {
+
+    function getDateData(dateCounter){
+      //dataOfMonth['date']=dateInMonth[dateCounter];
+      var priceTotal=0;
+      console.log(newCounter);
+      // if(newCounter<10) newCounterString = '0' + newCounter;
+      // else newCounterString = newCounter.toString();
+
+        $.getJSON('api/search?monthPurchased='+searchmP+'&sdate='+ dateInMonth[dateCounter], function(data) {
+          console.log('THE MONTH DATA FOR ' + searchmP + ' ' + dateInMonth[dateCounter] + ' is ' + data);
+          
+          //dataOfMonth['purchasedAmount']=data.length;
+          var priceTotal=0;
+          for(var j=0; j<data.length;j++){
+              priceTotal+=data[j].price;
+              
+            }
+          //console.log(priceTotal);
+          var newDay = {};
+          newDay['purchasedValue']=priceTotal;
+          newDay['purchasedAmount']=data.length;
+          newDay['date'] = dateInMonth[dateCounter];
+          dataOfMonth.push(newDay);
+
+          // priceTotalMonth.push(priceTotal);
+          // monthDate.push(dataOfMonth);
+          counter++;
+          newCounter++;
+          if(newCounter<newdate) getDateData(newCounter);
+          if(newCounter>=newdate){
+            console.log('month data is ' + dataOfMonth);
+            renderDates(dataOfMonth);
+          } 
+
+          if(counter==(newdate-1)) {console.log();}
+          // console.log(monthDate);
+          });
+           //console.log(priceTotalMonth);
+        } 
+    //}   
+
+
 }
-function renderMonthData(){
+
+
+function renderDates(datesArray){
+
+    for(var j=0; j<datesArray.length;j++){
+      console.log('the date is ' + datesArray[j].date);
+      console.log('the purchasedValue is ' + datesArray[j].purchasedValue);
+      console.log('the purchasedAmount is ' + datesArray[j].purchasedAmount);
+       var price=Math.floor( datesArray[j].purchasedValue);
+      // do something with it on the page
+
+    var htmlToAdd=  '<div class="col-xs-4 centered">'+
+             '<div class="showdate">'+
+               '<h4>'+'$'+price+'</h4>'+
+               '<h5>'+month+'-'+datesArray[j].date+'-15'+'</h5>'+
+               '<p> purchased amount'+datesArray[j].purchasedAmount+'</p>'+
+             '</div>'+
+         '</div>' 
+    
+    jQuery("#showDate").append(htmlToAdd);
+
+
+
+
+
+    }
+
+
 
 }
 function daysInMonth(month,year) {
@@ -238,19 +289,19 @@ function renderSpends(spends){
            $('#bar' + [i]).css('width', happypoint + '%');
       }
 //----------------------------------------------------------------------
-      for(var i=0;i<spends.length;i++){
+      // for(var i=0;i<spends.length;i++){
 
-        var htmlToAdd = '<div class="col-md-4">'+
-          '<img src='+spends[i].url+' width="200">'+
-          '<h1>'+spends[i].price+'</h1>'+
-          '<h1>'+spends[i].stuffname+'</h1>'+
-          '<h1>'+spends[i].shop+'</h1>'+
-          '<h1>'+spends[i].note+'</h1>'+
-          '<button class="btn-submit .margin-top-5 deletebtn wow fadeInLeft animated" data-id="'+spends[i]._id+'" id="btn['+i+']"><a>Delete</a></button>'
-        '</div>';
+      //   var htmlToAdd = '<div class="col-md-4">'+
+      //     '<img src='+spends[i].url+' width="200">'+
+      //     '<h1>'+spends[i].price+'</h1>'+
+      //     '<h1>'+spends[i].stuffname+'</h1>'+
+      //     '<h1>'+spends[i].shop+'</h1>'+
+      //     '<h1>'+spends[i].note+'</h1>'+
+      //     '<button class="btn-submit .margin-top-5 deletebtn wow fadeInLeft animated" data-id="'+spends[i]._id+'" id="btn['+i+']"><a>Delete</a></button>'
+      //   '</div>';
       
-        jQuery("#spends-holder").append(htmlToAdd);
-      }
+      //   jQuery("#spends-holder").append(htmlToAdd);
+      // }
 
       $('button').on('click', function(e){
          e.preventDefault();
