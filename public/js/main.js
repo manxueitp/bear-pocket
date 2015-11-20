@@ -116,7 +116,7 @@ function renderDates(datesArray){
              '<div class="showdate">'+
                '<h4>'+'$'+price+'</h4>'+
                '<h5>'+month+'-'+datesArray[j].date+'-15'+'</h5>'+
-               '<p> purchased amount'+datesArray[j].purchasedAmount+'</p>'+
+               '<p>'+datesArray[j].purchasedAmount+' things</p>'+
              '</div>'+
          '</div>' 
     
