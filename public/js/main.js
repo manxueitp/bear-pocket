@@ -9,8 +9,11 @@ var year=dateFormat(now,"yyyy");
 var time=dateFormat(now,"isoTime");
 var today=dateFormat(now,"isoDate");
 var nowmonth = dateFormat(now,"m");
-var priceTotalMonth=[];
+//var priceTotalMonth=[];
+var monthTotalPrice=0;
+var monthTotalAmount=0;
 //var happypointTotal=0;
+var dateInMonth=['01','02','03','04','05','06','07','08','09','10','11','12','13','14','15','16','17','18','19','20','21','22','23','24','25','26','27','28','29','30','31'];
 
 function init() {
   
@@ -21,18 +24,24 @@ function init() {
   };
 
   map = new google.maps.Map(document.getElementById("map-canvas"), mapOptions);
-  
-  //showMonth(nowmonth);
   getData(today);
-  //renderPlaces();
+
+  $(".showbar").hide();
+  $("#see-month").show();
+
+  $('#see-month').click(function(){
+  $(".showbar").slideToggle();
+  $("#see-month").show();
+  });
 }
 
+//get today's data
 var getData = function(date){
    jQuery.ajax({
     url : '/api/get/'+date,
     dataType : 'json',
     success : function(response) {
-      console.log(response);
+//      console.log(response);
       var spends = response.spends;
 
       renderPlaces(spends);
@@ -50,123 +59,99 @@ var showMonth=function(month){
   var monthDate=[];
   
   var newdate=parseInt(date);
-  //console.log(newdate);
-  //console.log(dateInMonth[2]);
 
   var dataOfMonth=[];
   var newCounter = 0;
 
   getDateData(0);
-  // for (var i = 0; i < newdate; i++) {
 
     function getDateData(dateCounter){
-      //dataOfMonth['date']=dateInMonth[dateCounter];
       var priceTotal=0;
-      console.log(newCounter);
-      // if(newCounter<10) newCounterString = '0' + newCounter;
-      // else newCounterString = newCounter.toString();
+      //console.log(newCounter);
 
         $.getJSON('api/search?monthPurchased='+searchmP+'&sdate='+ dateInMonth[dateCounter], function(data) {
-          console.log('THE MONTH DATA FOR ' + searchmP + ' ' + dateInMonth[dateCounter] + ' is ' + data);
-          
-          //dataOfMonth['purchasedAmount']=data.length;
+          //console.log('THE MONTH DATA FOR ' + searchmP + ' ' + dateInMonth[dateCounter] + ' is ' + data);
           var priceTotal=0;
           for(var j=0; j<data.length;j++){
               priceTotal+=data[j].price;
               
             }
-          //console.log(priceTotal);
           var newDay = {};
           newDay['purchasedValue']=priceTotal;
           newDay['purchasedAmount']=data.length;
           newDay['date'] = dateInMonth[dateCounter];
           dataOfMonth.push(newDay);
 
-          // priceTotalMonth.push(priceTotal);
-          // monthDate.push(dataOfMonth);
+          monthTotalPrice+=Math.floor(priceTotal);
+          monthTotalAmount+=data.length;
+          var monthTotal={};
+          monthTotal['purchasedValue']=monthTotalPrice;
+          monthTotal['purchasedAmount']=monthTotalAmount;
+          monthTotal['month'] = month;
+          
+         //console.log("Month Total Price-->"+ monthTotalPrice);
+         //console.log("Month Total Amount -->"+ monthTotalAmount);
+         
           counter++;
           newCounter++;
           if(newCounter<newdate) getDateData(newCounter);
           if(newCounter>=newdate){
-            console.log('month data is ' + dataOfMonth);
+//            console.log('month data is ' + dataOfMonth);
             renderDates(dataOfMonth);
           } 
-
           if(counter==(newdate-1)) {console.log();}
-          // console.log(monthDate);
-          });
-           //console.log(priceTotalMonth);
+          });          
         } 
-    //}   
-
-
 }
 
 
 function renderDates(datesArray){
-
+    //console.log(datesArray);
+    document.getElementById('showDate').innerHTML="";
     for(var j=0; j<datesArray.length;j++){
-      console.log('the date is ' + datesArray[j].date);
-      console.log('the purchasedValue is ' + datesArray[j].purchasedValue);
-      console.log('the purchasedAmount is ' + datesArray[j].purchasedAmount);
-       var price=Math.floor( datesArray[j].purchasedValue);
+      var price=Math.floor( datesArray[j].purchasedValue);
       // do something with it on the page
+     
 
-    var htmlToAdd=  '<div class="col-xs-4 centered">'+
-             '<div class="showdate">'+
+    var htmlToAdd=  '<div class="col-xs-4 col-sm-3 col-md-2 centered">'+
+             '<div class="showdate" id="'+j+'">'+
+               '<span id="showdate'+j+'" class="circle">'+'</span>'+
                '<h4>'+'$'+price+'</h4>'+
-               '<h5>'+month+'-'+datesArray[j].date+'-15'+'</h5>'+
+               '<h5>'+nowmonth+'-'+datesArray[j].date+'-15'+'</h5>'+
                '<p>'+datesArray[j].purchasedAmount+' things</p>'+
              '</div>'+
          '</div>' 
     
-    jQuery("#showDate").append(htmlToAdd);
-
-
-
-
-
+      jQuery("#showDate").append(htmlToAdd);
+      if(price>100){
+          $('#showdate' + j).css({'width': '60px', 'height': '60px'});
+        }else if(price<=100){
+          var radius = Math.floor(price/100*30 + 30);
+//          console.log('radius'+radius);
+          $('#showdate' + j).css({'width': radius+'px', 'height': radius+'px'});
+        }
+        
+        //var queryDate = year + '-' + nowmonth + '-'+ dateInMonth[j];
+        //console.log('queryDate'+queryDate);
     }
 
+    $( '.showdate').click(function(){
+            var id= $(this).attr('id');
+            var num=parseInt(id);
+            //console.log('num'+num);
 
+            var queryDate = year + '-' + nowmonth + '-'+ dateInMonth[num];
+             console.log('queryDate'+queryDate);
+             //console.log('queryDate in function'+queryDate);
+            getData(queryDate);
+         });
 
 }
 function daysInMonth(month,year) {
     return new Date(year, month, 0).getDate();
 }
 //----------------------------------------------------------show month-----------------------------------
-var showMonthValue=function(month){
-  var datenum=daysInMonth(month,year);
-  //console.log(datenum);
-  var searchmP=year+'-'+month;
-  var counter = 0;
-  var dateInMonth=[01,02,03,04,05,06,07,08,09,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31];
-  var monthDate=[];
-  
-  var newdate=parseInt(date);
-  //console.log(newdate);
-  //console.log(dateInMonth[2]);
-  
-  $.getJSON('api/search?monthPurchased='+searchmP, function(data) {
-    console.log(data);
-    var priceOnDate=0;
-    for(i=0;i<=data.length;i++){
-      for(j=0; j<=dateInMonth.length; j++)
-        if(data[i].sdate==dateInMonth[j]){
-             priceOnDate+=data[i].price;  
-        }
-      priceTotalMonth.push(priceOnDate);
-      console.log(priceTotalMonth);
-    }
-    
 
-    });
-     
-   
-}
-function renderMonthData(){
-
-}
 
 //----------------------------------------------------------google map show places-----------------------------------
 var renderPlaces = function(spends) {
@@ -174,15 +159,7 @@ var renderPlaces = function(spends) {
       content: ''
   });
 
-  //console.log(today);
-
-  // jQuery.ajax({
-  //   url : '/api/get/'+today,
-  //   dataType : 'json',
-  //   success : function(response) {
-  //     console.log(response);
-  //     var spends = response.spends;
-  //     // first clear any existing markers, because we will re-add below
+  // first clear any existing markers, because we will re-add below
       clearMarkers();
       markers = [];
       
@@ -209,9 +186,6 @@ var renderPlaces = function(spends) {
       setChartDefaults();
       buildDoughnutChart(spends);
   
-  
-  //    }
-  // })
 }
 var bindInfoWindow = function(marker, map, infowindow, html) {
     google.maps.event.addListener(marker, 'click', function() {
@@ -228,7 +202,7 @@ function clearMarkers(){
 //--------------------------------------------render spend----------------------------------------------
 function renderSpends(spends){
   
-  
+      document.getElementById('cd-timeline').innerHTML="";
       for(var i=0;i<spends.length;i++){
 
         
@@ -260,6 +234,7 @@ function renderSpends(spends){
           }
           var happypoint= spends[i].mood*10;
           
+
           var htmlToAdd= '<div class="cd-timeline-block wow fadeInUp animated">'+
                 '<div class="cd-timeline-img'+ ' cd-'+spends[i].category+' cd-timeline-block wow fadeInLeft animated">'+
                   '<i class="fa '+icon+' icon"></i>'+
@@ -288,20 +263,8 @@ function renderSpends(spends){
           jQuery("#cd-timeline").append(htmlToAdd);
            $('#bar' + [i]).css('width', happypoint + '%');
       }
-//----------------------------------------------------------------------
-      // for(var i=0;i<spends.length;i++){
-
-      //   var htmlToAdd = '<div class="col-md-4">'+
-      //     '<img src='+spends[i].url+' width="200">'+
-      //     '<h1>'+spends[i].price+'</h1>'+
-      //     '<h1>'+spends[i].stuffname+'</h1>'+
-      //     '<h1>'+spends[i].shop+'</h1>'+
-      //     '<h1>'+spends[i].note+'</h1>'+
-      //     '<button class="btn-submit .margin-top-5 deletebtn wow fadeInLeft animated" data-id="'+spends[i]._id+'" id="btn['+i+']"><a>Delete</a></button>'
-      //   '</div>';
-      
-      //   jQuery("#spends-holder").append(htmlToAdd);
-      // }
+//---------------delete btn-------------------------------------------------------
+    
 
       $('button').on('click', function(e){
          e.preventDefault();
@@ -331,6 +294,8 @@ function renderSpends(spends){
 //--------------------------------------------
 function buildDoughnutChart(spends){
 
+  //document.getElementById('#doughnutChartLegend').innerHTML="";
+  $('#doughnutChartLegend').empty();
   var eatingTotal=0
   var foodTotal=0;
   var drinkTotal = 0;
@@ -426,9 +391,6 @@ function buildDoughnutChart(spends){
   // first, get the context of the canvas where we're drawing the chart
   var ctx = document.getElementById("doughnutChart").getContext("2d");
   
-  // now, create the donought chart, passing in:
-  // 1. the data (required)
-  // 2. chart options (optional)
   var myDoughnutChart = new Chart(ctx).Doughnut(data,options);  
   // create the legend
   var chartLegend = myDoughnutChart.generateLegend();
@@ -441,6 +403,8 @@ function renderCounts(eatingTotal,drinkTotal){
   document.getElementById('drinkCount').innerHTML = '$'+ drinkTotal;
 
 }
+
+
 //--------------------------------------------------------------------------------------------
 //$( "#btn-photo" ).click(takePicture());
 //document.getElementById('btn-photo').addEventListener('click', renderFoods);

@@ -14,7 +14,7 @@ var Spend = require("../models/spend.js");
 // S3 File dependencies
 var AWS = require('aws-sdk');
 var awsBucketName = process.env.AWS_BUCKET_NAME;
-var s3Path = process.env.AWS_S3_PATH; // TODO - we shouldn't hard code the path, but get a temp URL dynamically using aws-sdk's getObject
+var s3Path = process.env.AWS_S3_PATH; 
 AWS.config.update({
   accessKeyId: process.env.AWS_ACCESS_KEY,
   secretAccessKey: process.env.AWS_SECRET_KEY
@@ -28,14 +28,6 @@ var multipartMiddleware = multipart();
 
 //-------------------------------------------------------------------------------
 router.get('/', function(req, res) {
-  
-  // var jsonData = {
-  // 	'name': 'canlory-data',
-  // 	'api-status':'OK'
-  // }
-// // respond with json data
-  // res.json(jsonData)
-
   res.render('input.html')
 });
 
@@ -58,104 +50,15 @@ router.get('/add-with-image', function(req,res){
 })
 
 
-// /**-----------------------------------------------------------------------------//
 
-router.post('/api/create', function(req, res){
-
-    
-    //return res.redirect('/add-meal');
-    console.log('the data we received is --> ')
-    console.log(req.body);
-    // pull out the information from the req.body
-
-    var price = req.body.price;
-    var stuffname = req.body.stuffname;
-    var category = req.body.category;
-    var month = req.body.month;
-    var sdate = req.body.sdate; 
-    var spendtime = req.body.spendtime;
-    var shop = req.body.shop;
-    var location = req.body.location;
-    var note = req.body.note;
-    var url = req.body.url;
-    var mood = req.body.mood;
-    
-    var currentYear = new Date().getFullYear();
-    var monthNumber = convertMonthNameToNumber(month);
-    var timePurchased = currentYear + '-' + monthNumber + '-'+ sdate + 'T' + spendtime;
-    
-    var spendObj = {
-      price: price,
-      stuffname: stuffname,
-      category:category,
-      month:month,
-      sdate:sdate,
-      spendtime:spendtime,
-      shop:shop,
-      //location:location,
-      note:note,
-      url:url,
-      mood:mood,
-      timePurchased: timePurchased,
-      datePurchased: datePurchased,
-      monthPurchased: monthPurchased
-    };
-    
-    // location thing
-    if(!location) return res.json({status:'ERROR', message: 'You are missing a required field or have submitted a malformed request.'})
-
-    geocoder.geocode(location, function (err,data) {
-
-      if (!data || data==null || err || data.status == 'ZERO_RESULTS'){
-        var error = {status:'ERROR', message: 'Error finding location'};
-        return res.json({status:'ERROR', message: 'You are missing a required field or have submitted a malformed request.'})
-      }
-
-      var lon = data.results[0].geometry.location.lng;
-      var lat = data.results[0].geometry.location.lat;
-  
-      spendObj.location = {
-        geo: [lon,lat], 
-        name: data.results[0].formatted_address 
-      }
-     // location end
-
-    var  spend = new Spend(spendObj);
-   
-    spend.save(function(err,data){
-      // if err saving, respond back with error
-      if (err){
-        var error = {
-          status:'ERROR', 
-          message: 'Error saving spend'
-        }
-        return res.json(error);
-      }
-
-      console.log('saved a new spend!');
-      console.log(data);
-      
-      var jsonData = {
-        status: 'OK',
-        spend: data
-      }
-
-      //return res.json(jsonData);
-      //return res.render('result.html');
-      return res.redirect('/submit-spend')
-
-    }) 
-
-    }); 
-});
 // /**----api/create/image-------------------------------------------------------------------------//
 
 router.post('/api/create/image', multipartMiddleware, function(req,res){
 
     
-    console.log('the incoming files >> ' + JSON.stringify(req.files)); 
-    console.log('the incoming data >> ' + JSON.stringify(req.body));
-    console.log('the incoming image file >> ' + JSON.stringify(req.files.image));
+//    console.log('the incoming files >> ' + JSON.stringify(req.files)); 
+//    console.log('the incoming data >> ' + JSON.stringify(req.body));
+//    console.log('the incoming image file >> ' + JSON.stringify(req.files.image));
     // pull out the information from the req.body
     
     
@@ -332,7 +235,7 @@ router.get('/api/get/:datePurchased', function(req, res){
 
   //var date = req.query.date;
   var requestedDate = req.params.datePurchased;
-  console.log(requestedDate);
+//  console.log(requestedDate);
   
   //Spend.find().sort('-timePurchased').exec(function(err, data){
     // if err or no animals found, respond with error 
@@ -529,7 +432,7 @@ router.get('/api/delete/:id', function(req, res){
 //-----------------query-------------------------------------------------------------//
 router.get('/api/search',function(req,res){
 
-  console.log('the query is ' + req.query.datePurchased);
+//  console.log('the query is ' + req.query.datePurchased);
 
   var searchQuery = {};
 

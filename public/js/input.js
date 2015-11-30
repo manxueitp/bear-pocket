@@ -13,11 +13,6 @@ var renderTime=function(){
   document.getElementById('input-month').value = month;
   document.getElementById('input-sdate').value = date;
   document.getElementById('input-spendtime').value = time;
-  
-  console.log(month);
-  console.log(date);
-  console.log(year);
-  console.log(time);
 }
 //----------------------------------------------------------Input Location-------------------------------
 var renderLocation=function(){
@@ -108,7 +103,7 @@ var defaultInput=function(){
            event.target.files[0].type.indexOf("image/") == 0) {
             $("#display-img").attr("src",URL.createObjectURL(event.target.files[0]));
             var imgURL=URL.revokeObjectURL(URL.createObjectURL(event.target.files[0]));
-            console.log(imgURL);
+
         }
   }
    
