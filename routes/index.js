@@ -58,7 +58,8 @@ router.post('/api/create/image', multipartMiddleware, function(req,res){
     
 //    console.log('the incoming files >> ' + JSON.stringify(req.files)); 
 //    console.log('the incoming data >> ' + JSON.stringify(req.body));
-//    console.log('the incoming image file >> ' + JSON.stringify(req.files.image));
+    //console.log('the incoming image file >> ' + JSON.stringify(req.files.image));
+
     // pull out the information from the req.body
     
     
@@ -77,6 +78,10 @@ router.post('/api/create/image', multipartMiddleware, function(req,res){
     var currentYear = new Date().getFullYear();
  
     var monthNumber = convertMonthNameToNumber(month);
+    if(monthNumber<10){
+      monthNumber='0'+monthNumber;
+    }
+    //var timePurchased = currentYear + '-' + monthNumber + '-'+ sdate + 'T' + spendtime + '.000Z';
     var timePurchased = currentYear + '-' + monthNumber + '-'+ sdate + 'T' + spendtime + '.000Z';
     var datePurchased = currentYear + '-' + monthNumber + '-'+ sdate;
     var monthPurchased = currentYear + '-' + monthNumber;
@@ -98,6 +103,7 @@ router.post('/api/create/image', multipartMiddleware, function(req,res){
       monthPurchased: monthPurchased
     };
     
+    console.log('timePurchased >> ' + timePurchased);
     // location thing
     if(!location) return res.json({status:'ERROR', message: 'You are missing a required field or have submitted a malformed request.'})
 

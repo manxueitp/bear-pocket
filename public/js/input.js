@@ -98,7 +98,7 @@ var defaultInput=function(){
     //Credit: https://www.youtube.com/watch?v=EPYnGFEcis4&feature=youtube_gdata_player
   function gotPic(event) {
 
-    console.log("got Pic");
+   
         if(event.target.files.length == 1 && 
            event.target.files[0].type.indexOf("image/") == 0) {
             $("#display-img").attr("src",URL.createObjectURL(event.target.files[0]));

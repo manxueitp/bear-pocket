@@ -8,12 +8,15 @@ var date= dateFormat(now,"dd");
 var year=dateFormat(now,"yyyy");
 var time=dateFormat(now,"isoTime");
 var today=dateFormat(now,"isoDate");
-var nowmonth = dateFormat(now,"m");
+var nowmonth = dateFormat(now,"mm");
 //var priceTotalMonth=[];
 var monthTotalPrice=0;
 var monthTotalAmount=0;
 //var happypointTotal=0;
 var dateInMonth=['01','02','03','04','05','06','07','08','09','10','11','12','13','14','15','16','17','18','19','20','21','22','23','24','25','26','27','28','29','30','31'];
+
+console.log("now="+now);
+console.log("month="+month);
 
 function init() {
   
@@ -30,11 +33,11 @@ function init() {
   $("#see-month").show();
 
   $('#see-month').click(function(){
-  $(".showbar").slideToggle();
-  $("#see-month").show();
+    $(".showbar").slideToggle();
+    $("#see-month").show();
   });
 }
-
+//______________________________________________________________________________________
 //get today's data
 var getData = function(date){
    jQuery.ajax({
@@ -51,9 +54,12 @@ var getData = function(date){
 
 //--------------------------------------------------------------searchDate-----------------------------------------
 var showMonth=function(month){
+  //month in this function is nowmonth(mm)
   var datenum=daysInMonth(month,year);
   //console.log(datenum);
+  
   var searchmP=year+'-'+month;
+  console.log("searchmP"+searchmP);
   var counter = 0;
   var dateInMonth=['01','02','03','04','05','06','07','08','09','10','11','12','13','14','15','16','17','18','19','20','21','22','23','24','25','26','27','28','29','30','31'];
   var monthDate=[];
@@ -87,10 +93,10 @@ var showMonth=function(month){
           var monthTotal={};
           monthTotal['purchasedValue']=monthTotalPrice;
           monthTotal['purchasedAmount']=monthTotalAmount;
-          monthTotal['month'] = month;
+          monthTotal['month'] = month;//mm
           
-         //console.log("Month Total Price-->"+ monthTotalPrice);
-         //console.log("Month Total Amount -->"+ monthTotalAmount);
+         console.log("Month Total Price-->"+ monthTotalPrice);
+         console.log("Month Total Amount -->"+ monthTotalAmount);
          
           counter++;
           newCounter++;
@@ -139,7 +145,7 @@ function renderDates(datesArray){
             var id= $(this).attr('id');
             var num=parseInt(id);
             //console.log('num'+num);
-
+ 
             var queryDate = year + '-' + nowmonth + '-'+ dateInMonth[num];
              console.log('queryDate'+queryDate);
              //console.log('queryDate in function'+queryDate);
@@ -201,12 +207,10 @@ function clearMarkers(){
 }
 //--------------------------------------------render spend----------------------------------------------
 function renderSpends(spends){
-  
+    //
+    console.log(spends);
       document.getElementById('cd-timeline').innerHTML="";
       for(var i=0;i<spends.length;i++){
-
-        
-
           if(spends[i].category=="eating"){
             icon= "fa-cutlery";
           }else if (spends[i].category=="rental"){
@@ -234,6 +238,9 @@ function renderSpends(spends){
           }
           var happypoint= spends[i].mood*10;
           
+          console.log("spends[i].month="+spends[i].month);
+          console.log("spends[i].category="+spends[i].category);
+
 
           var htmlToAdd= '<div class="cd-timeline-block wow fadeInUp animated">'+
                 '<div class="cd-timeline-img'+ ' cd-'+spends[i].category+' cd-timeline-block wow fadeInLeft animated">'+
