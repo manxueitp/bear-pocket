@@ -124,6 +124,7 @@ router.post('/api/create/image', multipartMiddleware, function(req,res){
      // -----location 
      
      //image thing (file)
+     
       var filename = req.files.image.name; // actual filename of file
       var path = req.files.image.path; // will be put into a temp directory
       var mimeType = req.files.image.type; // image/jpeg or actual mime type

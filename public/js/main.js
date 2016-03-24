@@ -15,8 +15,8 @@ var monthTotalAmount=0;
 //var happypointTotal=0;
 var dateInMonth=['01','02','03','04','05','06','07','08','09','10','11','12','13','14','15','16','17','18','19','20','21','22','23','24','25','26','27','28','29','30','31'];
 
-console.log("now="+now);
-console.log("month="+month);
+//console.log("now="+now);
+//console.log("month="+month);
 
 function init() {
   
@@ -59,7 +59,7 @@ var showMonth=function(month){
   //console.log(datenum);
   
   var searchmP=year+'-'+month;
-  console.log("searchmP"+searchmP);
+//  console.log("searchmP"+searchmP);
   var counter = 0;
   var dateInMonth=['01','02','03','04','05','06','07','08','09','10','11','12','13','14','15','16','17','18','19','20','21','22','23','24','25','26','27','28','29','30','31'];
   var monthDate=[];
@@ -95,8 +95,8 @@ var showMonth=function(month){
           monthTotal['purchasedAmount']=monthTotalAmount;
           monthTotal['month'] = month;//mm
           
-         console.log("Month Total Price-->"+ monthTotalPrice);
-         console.log("Month Total Amount -->"+ monthTotalAmount);
+//         console.log("Month Total Price-->"+ monthTotalPrice);
+   //      console.log("Month Total Amount -->"+ monthTotalAmount);
          
           counter++;
           newCounter++;
@@ -147,7 +147,7 @@ function renderDates(datesArray){
             //console.log('num'+num);
  
             var queryDate = year + '-' + nowmonth + '-'+ dateInMonth[num];
-             console.log('queryDate'+queryDate);
+//             console.log('queryDate'+queryDate);
              //console.log('queryDate in function'+queryDate);
             getData(queryDate);
          });
@@ -207,8 +207,7 @@ function clearMarkers(){
 }
 //--------------------------------------------render spend----------------------------------------------
 function renderSpends(spends){
-    //
-    console.log(spends);
+    //console.log(spends);
       document.getElementById('cd-timeline').innerHTML="";
       for(var i=0;i<spends.length;i++){
           if(spends[i].category=="eating"){
@@ -238,10 +237,10 @@ function renderSpends(spends){
           }
           var happypoint= spends[i].mood*10;
           
-          console.log("spends[i].month="+spends[i].month);
-          console.log("spends[i].category="+spends[i].category);
-
-
+          //console.log("spends[i].month="+spends[i].month);
+          //console.log("spends[i].category="+spends[i].category);
+           
+         
           var htmlToAdd= '<div class="cd-timeline-block wow fadeInUp animated">'+
                 '<div class="cd-timeline-img'+ ' cd-'+spends[i].category+' cd-timeline-block wow fadeInLeft animated">'+
                   '<i class="fa '+icon+' icon"></i>'+
@@ -258,7 +257,7 @@ function renderSpends(spends){
                     +'</div>'+
                     
                     '<div class="col-sm-6 centered ">'+
-                     '<img class="margin-bottom-10" src='+spends[i].url+' width="400">'+
+                     '<img class="ifShow" src='+spends[i].url+' width="400">'+
                     '</div>'+
                     '<button class="btn-delete margin-top-5 deletebtn wow fadeInLeft animated" data-id="'+spends[i]._id+'" id="btn['+i+']"><a>Delete</a></button>'+
                   '</div>'+
@@ -269,6 +268,10 @@ function renderSpends(spends){
 
           jQuery("#cd-timeline").append(htmlToAdd);
            $('#bar' + [i]).css('width', happypoint + '%');
+           if(spends[i].url=''){
+            $('.ifShow').css({display:'none'});
+           }
+           $('.simpleClass').css({display:'none'});
       }
 //---------------delete btn-------------------------------------------------------
     
