@@ -3,6 +3,8 @@ var geocoder = new google.maps.Geocoder;
 var hasLocation = false;
 
 //----------------------------------------------------------default input -----------------------------------
+
+
 var renderTime=function(){
   var now=new Date();
   var month=dateFormat(now,"mmmm");
@@ -62,40 +64,9 @@ var defaultInput=function(){
   renderTime();
   renderLocation();
 }
-//---------------------------------------------------------take photos by phonegap-----------------------------------
-// function takePicture() {
 
-//   navigator.camera.getPicture(onSuccess, onFail, { quality: 50,
-//       destinationType: Camera.DestinationType.FILE_URI
-//   });
-// }
-
-// function onSuccess(imageData) {
-//     var image = document.getElementById('mypicture');
-//     //image.src = "data:image/jpeg;base64," + imageData;
-//     console.log(imageData);
-//     image.src = imageData;
-
-// }
-
-// function onFail(message) {
-//     alert('Failed because: ' + message);
-// }
 
 //---------------------------------------------------------take photos by browser-----------------------------------
-
-    
-    
-    // desiredWidth = window.innerWidth;
-        
-    //     if(!("url" in window) && ("webkitURL" in window)) {
-    //         window.URL = window.webkitURL;   
-    //     }
-    
-
-  
-  
-    //Credit: https://www.youtube.com/watch?v=EPYnGFEcis4&feature=youtube_gdata_player
   function gotPic(event) {
 
    

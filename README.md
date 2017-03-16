@@ -10,7 +10,7 @@ npm install
 
 3. if you already set up a heroku app, set remote heroku app to the repository
 ```
-git remote add heroku git@heroku.com:projuct name
+git remote add heroku git@heroku.com:projuct name.git
 ```
 if not, create a new heroku app
 ```
