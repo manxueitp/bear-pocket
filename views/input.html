@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Bear's Pocket</title>
+
+    <!-- Custom Font -->
+    <link href='http://fonts.googleapis.com/css?family=Raleway:200,500,700,800,900' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Pathway+Gothic+One' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Hind:300|Sintony:400,700|Signika+Negative:300,400,700' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/animate.css">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/timeline.css">
+  </head>
+  
+
+  <body>
+    <div class=topbar>Bear's Pocket</div>
+    <section class="content bg-blue wow fadeIndown animated" id="first-section">
+      <div class="wrap">
+        <form method="post" action="/api/create/image" enctype="multipart/form-data">
+          <div class="title title-index wow fadeInUp animated">What I spent on today?</div>
+          <!-- price -->
+          <div class="row">
+            <div class="col-sm-6 centered ">
+              <span class="input input--minoru wow fadeInLeft animated">
+                  <input class="input__field input__field--a" type="text" id="input-price" name="price" value="price" />
+                  <label class="input__label input__label--a" for="price">
+                    <span class="input__label-content input__label-content--a">Price</span>
+                  </label>
+              </span>
+            </div>
+          </div>
+          <!-- category -->
+          <div class="row">
+            <div class="col-sm-12 col-md-6 col-lg-10">
+              <label class="col-sm-3 col-lg-1 margin-bottom-10 centered">
+                <input type="radio" id="input-category" name="category" value="eating" />
+                   <div class="cd-eating category wow fadeInLeft animated">
+                     <i class="fa fa-cutlery iconC"></i>
+                   </div>
+              </label>
+              <label class="col-sm-3 col-lg-1 margin-bottom-10 centered ">
+                <input type="radio" id="input-category" name="category" value="rental" />
+                   <div class="cd-rental category wow fadeInLeft animated">
+                     <i class="fa fa-home iconC"></i>
+                   </div>
+              </label>
+              <label class="col-sm-3 col-lg-1 margin-bottom-10 centered ">
+                <input type="radio" id="input-category" name="category" value="drink" />
+                   <div class="cd-drink category wow fadeInLeft animated">
+                     <i class="fa fa-coffee iconC"></i>
+                   </div>
+              </label>
+              <label class="col-sm-3 col-lg-1  margin-bottom-10 centered ">
+                <input type="radio" id="input-category" name="category" value="health" />
+                   <div class="cd-health category wow fadeInLeft animated">
+                     <i class="fa fa-medkit iconC"></i>
+                   </div>
+              </label>
+              <label class="col-sm-3 col-lg-1 margin-bottom-10 centered ">
+                <input type="radio" id="input-category" name="category" value="living" />
+                   <div class="cd-living category wow fadeInLeft animated">
+                     <i class="fa fa-bed iconC"></i>
+                   </div>
+              </label>
+              <label class="col-sm-3 col-lg-1 margin-bottom-10 centered ">
+                <input type="radio" id="input-category" name="category" value="transport" />
+                   <div class="cd-transport category wow fadeInLeft animated">
+                     <i class="fa fa-subway iconC"></i>
+                   </div>
+              </label>
+              <label class="col-sm-3 col-lg-1 margin-bottom-10 centered ">
+                <input type="radio" class="categoryinput" id="input-category" name="category" value="entertainment" />
+                   <div class="cd-entertainment category wow fadeInLeft animated">
+                     <i class="fa fa-gamepad iconC"></i>
+                   </div>
+              </label>
+              <label class="col-sm-3 col-lg-1 margin-bottom-10 centered ">
+                <input type="radio" id="input-category" name="category" value="shopping" />
+                   <div class="cd-shopping category wow fadeInLeft animated">
+                     <i class="fa fa-shopping-cart iconC"></i>
+                   </div>
+              </label>
+              
+            </div>
+           </div>
+           
+          <!-- Time -->
+          <div class="row">
+            <div class="col-sm-4 centered">
+              <span class="input input--minoru wow fadeInRight animated">
+                  <input class="input__field input__field--a" type="text" id="input-sdate" name="sdate" value="Date" />
+                  <label class="input__label input__label--a" for="sdate">
+                    <span class="input__label-content input__label-content--a"> Date </span>
+                  </label>
+              </span>
+            </div> 
+            <div class="col-sm-4 centered">
+              <span class="input input--minoru wow fadeInRight animated">
+                  <input class="input__field input__field--a" type="text" id="input-month" name="month" value="Month"/>
+                  <label class="input__label input__label--a" for="month">
+                    <span class="input__label-content input__label-content--a"> Month </span>
+                  </label>
+              </span>
+            </div>  
+            <div class="col-sm-4 centered">
+              <span class="input input--minoru wow fadeInRight animated">
+                  <input class="input__field input__field--a" type="text" id="input-spendtime" name="spendtime" value="Time" />
+                  <label class="input__label input__label--a" for="spendtime">
+                    <span class="input__label-content input__label-content--a"> Time </span>
+                  </label>
+              </span>
+            </div>  
+         </div>
+        
+        <!-- Location -->
+        <div class="row">
+          <div class="col-sm-8 centered">
+              <div id="map"></div>
+              <span class="input input--minoru wow fadeInRight animated">
+                  <input class="input__field input__field--a" type="text" id="input-location" name="location" value="NY,NewYork,10003"/>
+                  <label class="input__label input__label--a" for="location">
+                    <span class="input__label-content input__label-content--a"> Location </span>
+                  </label>
+              </span>
+          </div> 
+        </div>
+        
+        <!-- Notes -->
+        <div class="row">
+          <div class="col-sm-8 centered">
+              <span class="input input--minoru wow fadeInRight animated">
+                  <input class="input__field input__field--a" type="text" id="input-tag" name="note"/>
+                  <label class="input__label input__label--a" for="note">
+                    <span class="input__label-content input__label-content--a"> Note </span>
+                  </label>
+              </span>
+          </div> 
+        </div>
+
+        <!-- Mood -->
+        <div class="row slider">
+          <div class="col-sm-10 col-xs-12 centered">
+           
+            <div class="col-sm-2 col-xs-4 centered">
+              <img src="img/angry.png">
+            </div>
+            <div class="col-sm-6 col-xs-4 centered bar">
+            </div>
+            <div class="col-sm-2 col-xs-4 centered">
+              <img src="img/happy.png">
+            </div>
+            <div class="col-sm-10 col-xs-12 centered bar">
+              <input type="range" min="0" max="10" step="1" value="10" id="input-mood" name="mood" class="slider-bar wow fadeInRight animated">
+              <div id="input-mood-value" class="value">100% Happy</div>
+            </div>
+           
+          </div> 
+        </div>
+        
+        <!-- take photo -->
+        <div class="row">
+          <div class="col-sm-8">
+            
+              <label for="image">
+                <input type="file" capture="camera" id="takePictureField"  name="image" value="Select a Photo"/>
+              </label>
+              <img id="display-img">
+          </div>
+          <div class="mypicture">
+          </div>
+        </div>
+
+        <!-- alert -->
+        <div id="alert"></div>
+        <!-- submit btn -->
+        <button class="btn-submit wow fadeInLeft animated" type="submit" id="btn-submit-spend"><a>Submit</a></button>
+        </form>       
+      </div>
+    </section>
+  </body>
+  
+  
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+  <script src="http://code.jquery.com/jquery-1.11.1.js"></script>
+  <script src="js/classie.js"></script> 
+  <script src="js/dateformatting.js"></script> 
+  <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&key=AIzaSyAcN6VtdpM55-CGGyEAWX2qEWs_Qwg4wXM"></script>    
+
+  <!-- Latest compiled and minified JavaScript -->
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js" integrity="sha512-K1qjQ+NcF2TYO/eI3M6v8EiNYZfA95pQumfvcVrTHtwQVDG+aHRqLi/ETn2uB+1JqwYqVG3LIvdm9lj6imS/pQ==" crossorigin="anonymous"></script> 
+     <!-- CHART JS -->
+  <script src="js/Chart.js"></script>
+  <!-- input JS-->
+    <script>
+      (function() {
+        // trim polyfill : https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/Trim
+        if (!String.prototype.trim) {
+          (function() {
+            // Make sure we trim BOM and NBSP
+            var rtrim = /^[\s\uFEFF\xA0]+|[\s\uFEFF\xA0]+$/g;
+            String.prototype.trim = function() {
+              return this.replace(rtrim, '');
+            };
+          })();
+        }
+
+        [].slice.call( document.querySelectorAll( 'input.input__field' ) ).forEach( function( inputEl ) {
+          // in case the input is already filled..
+          if( inputEl.value.trim() !== '' ) {
+            classie.add( inputEl.parentNode, 'input--filled' );
+          }
+
+          // events:
+          inputEl.addEventListener( 'focus', onInputFocus );
+          inputEl.addEventListener( 'blur', onInputBlur );
+        } );
+
+        function onInputFocus( ev ) {
+          classie.add( ev.target.parentNode, 'input--filled' );
+        }
+
+        function onInputBlur( ev ) {
+          if( ev.target.value.trim() === '' ) {
+            classie.remove( ev.target.parentNode, 'input--filled' );
+          }
+        }
+      })();
+    </script>
+    <!-- input JS  end-->
+ 
+    <!-- OUR JS -->
+    <script src="js/input.js"></script> 
+</html>
