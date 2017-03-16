@@ -3,8 +3,6 @@ var geocoder = new google.maps.Geocoder;
 var hasLocation = false;
 
 //----------------------------------------------------------default input -----------------------------------
-
-
 var renderTime=function(){
   var now=new Date();
   var month=dateFormat(now,"mmmm");
@@ -64,9 +62,8 @@ var defaultInput=function(){
   renderTime();
   renderLocation();
 }
-
-
 //---------------------------------------------------------take photos by browser-----------------------------------
+
   function gotPic(event) {
 
    
