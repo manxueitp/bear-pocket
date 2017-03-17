@@ -225,6 +225,11 @@ button{
   border-bottom: 2px solid #ffd742;
 }
 
+.btn-left{
+  float: left;
+  font-size: 20px;
+}
+
 .btn-submit ,.btn-submit-, .btn-delete{
     margin-top: 2em;
     margin-left: 0.26em;
@@ -1097,8 +1102,6 @@ label > input[type=file]{ /* HIDE RADIO */
   color: #032063;
   font-weight: 900;
   border-bottom: 5px solid #ffe016;
-  overflow: hidden;
-  padding-left: 17%;
 }
 
 /***************************/
