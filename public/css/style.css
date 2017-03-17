@@ -16,13 +16,15 @@ a{
 
 }
 .content {
-  margin-top: 80px;
+  margin-top: 56px;
   padding: 0px;
   overflow: hidden;
 }
 .content2 {
   margin: 0px;
   padding: 0px;
+  top: 180px;
+  position: absolute;
   overflow: hidden;
 }
 
@@ -51,6 +53,10 @@ a{
 }
 
 
+button{
+  outline-style: none;
+  text-decoration: none;
+}
 
 .bg-blue{
   background: url(../img/bg.png) no-repeat #E1E9EC;
@@ -203,16 +209,20 @@ a{
 /* Submit button */
 /***************************/
 .btn-add {
-    width: 100%;
-    height: 66px;
-    background: #6FCEF1;
-    text-align: center;
-    font-size: 24px;
-    padding-top: 11px;
-    color: #032063;
-    font-weight: 900;
-    border-bottom: 5px solid #30C1F7;
-    display: block;
+  float: right;
+  display: block;
+  height: 40px;
+  width: 40px;
+  margin: 8px;
+  background: #ffd53c;
+  text-align: center;
+  font-size: 40px;
+  line-height: 40px;
+  color: #032063;
+  font-weight: 500;
+  border-radius: 50%;
+  cursor: cell;
+  border-bottom: 2px solid #ffd742;
 }
 
 .btn-submit ,.btn-submit-, .btn-delete{
@@ -234,6 +244,7 @@ a{
    color: #fff;
    background: #032063;
    font-weight: 700;
+   text-decoration: none;
 }
 
 
@@ -258,6 +269,7 @@ a{
     -webkit-transition: background 0.5s;
     transition: all 1s;
     -webkit-transition: border-shadow 0.8s;
+    text-decoration: none;
 }
 
 .btn-delete a{
@@ -269,6 +281,7 @@ a{
   margin-top: -10px;
   float: right;
   border: 3px solid #032063;
+  text-decoration: none;
 }
 
 .float-left{
@@ -795,18 +808,36 @@ h1{
 }
 
 .title-new{
-    color: #fff;
-    background-color: #415177;
-    font-size: 3.6em;
-    font-weight: 700;
-    width: 100%;
-    padding: 20px;
-    margin: 0px;
+  color: #fff;
+  background-color: #415177;
+  font-size: 3.6em;
+  font-weight: 700;
+  width: 100%;
+  padding: 20px;
+  margin: 0px;
 }
 /* IMPORTANT - must give map div height */
-#map-canvas { height:400px; 
-margin-top: 80px;}
+#map-canvas { 
+  height:140px; 
+  position: relative;
+  margin:5px auto;
+  width: 96%;
+  z-index: 1;
+  border-radius: 4px;
+  -webkit-box-shadow: 0px 1px 2px 1px rgba(153,153,153,0.6);
+  -moz-box-shadow: 0px 1px 2px 1px rgba(153,153,153,0.6);
+  box-shadow: 0px 1px 2px 1px rgba(153,153,153,0.6);
+}
 
+.map{
+  position: fixed;
+  display: block;
+  z-index: 1;
+  width: 100%;
+  top: 56px;
+  height:150px; 
+  background:#e9f0f5;;
+}
 /* IMPORTANT - fixes webkit infoWindow rendering */
 #map-canvas img { max-width: none; }
 
@@ -1054,18 +1085,20 @@ label > input[type=file]{ /* HIDE RADIO */
 /*menu view*/
 /***************************/
 .topbar{
- position: fixed;
+  position: fixed;
   top: 0px;
   width: 100%;
   z-index: 2;
-  height: 80px;
+  height: 56px;
   background: #FFE44E;
   text-align: center;
-  font-size: 36px;
-  padding-top: 12px;
+  font-size: 24px;
+  line-height: 56px;
   color: #032063;
   font-weight: 900;
-  border-bottom: 5px solid #FFBF3B;
+  border-bottom: 5px solid #ffe016;
+  overflow: hidden;
+  padding-left: 17%;
 }
 
 /***************************/
@@ -1126,23 +1159,6 @@ h5{
 }
 .showdate p{
   margin: 0px;
-}
-
-.btn-add{
-  
-    width: 100%;
-    height: 66px;
-    background: #6FCEF1;
-    text-align: center;
-    font-size: 24px;
-    padding-top: 11px;
-    color: #032063;
-    font-weight: 900;
-    border-bottom: 5px solid #30C1F7;
-}
-.btn-add a{
-  text-decoration: none;
-  color: #032063;
 }
 
 .ifShow{

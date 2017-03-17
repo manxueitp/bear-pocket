@@ -15,27 +15,33 @@ var monthTotalAmount=0;
 //var happypointTotal=0;
 var dateInMonth=['01','02','03','04','05','06','07','08','09','10','11','12','13','14','15','16','17','18','19','20','21','22','23','24','25','26','27','28','29','30','31'];
 
-//console.log("now="+now);
-//console.log("month="+month);
+//so slow to grab current location from google map api, so it's better to use user's spend data to locate their location.
+// function getCurrentMap(){
+//   if(navigator.geolocation){
+//     navigator.geolocation.watchPosition(successCallback, errorCallback, {});
+//     function successCallback(currentPosition) {
+//       var lat = currentPosition.coords.latitude;
+//       var lng = currentPosition.coords.longitude;
+//       console.log(lat);
+//       console.log(lng);
+//       var mapOptions = {
+//         center: new google.maps.LatLng(lat,lng), 
+//         zoom: 10,
+//         mapTypeId: google.maps.MapTypeId.ROADMAP
+//       };
+//       map = new google.maps.Map(document.getElementById("map-canvas"), mapOptions);
+//     }
+//     function errorCallback(e) {
+//       alert(e);
+//     }
+//   } else {
+//     alert("Geolocation is not supported by this browser.");
+//   }
+// }
 
 function init() {
-  
-  var mapOptions = {
-    center: new google.maps.LatLng(40.74649,-74.0094), // NYC
-    zoom: 10,
-    mapTypeId: google.maps.MapTypeId.ROADMAP
-  };
-
-  map = new google.maps.Map(document.getElementById("map-canvas"), mapOptions);
+  //getCurrentMap();
   getData(today);
-
-  $(".showbar").hide();
-  $("#see-month").show();
-
-  $('#see-month').click(function(){
-    $(".showbar").slideToggle();
-    $("#see-month").show();
-  });
 }
 //______________________________________________________________________________________
 //get today's data
@@ -44,154 +50,50 @@ var getData = function(date){
     url : '/api/get/'+date,
     dataType : 'json',
     success : function(response) {
-//      console.log(response);
       var spends = response.spends;
-
+      renderMap(spends);
       renderPlaces(spends);
     }
   })  
 }
-
-//--------------------------------------------------------------searchDate-----------------------------------------
-var showMonth=function(month){
-  //month in this function is nowmonth(mm)
-  var datenum=daysInMonth(month,year);
-  //console.log(datenum);
-  
-  var searchmP=year+'-'+month;
-//  console.log("searchmP"+searchmP);
-  var counter = 0;
-  var dateInMonth=['01','02','03','04','05','06','07','08','09','10','11','12','13','14','15','16','17','18','19','20','21','22','23','24','25','26','27','28','29','30','31'];
-  var monthDate=[];
-  
-  var newdate=parseInt(date);
-
-  var dataOfMonth=[];
-  var newCounter = 0;
-
-  getDateData(0);
-
-    function getDateData(dateCounter){
-      var priceTotal=0;
-      //console.log(newCounter);
-
-        $.getJSON('api/search?monthPurchased='+searchmP+'&sdate='+ dateInMonth[dateCounter], function(data) {
-          //console.log('THE MONTH DATA FOR ' + searchmP + ' ' + dateInMonth[dateCounter] + ' is ' + data);
-          var priceTotal=0;
-          for(var j=0; j<data.length;j++){
-              priceTotal+=data[j].price;
-              
-            }
-          var newDay = {};
-          newDay['purchasedValue']=priceTotal;
-          newDay['purchasedAmount']=data.length;
-          newDay['date'] = dateInMonth[dateCounter];
-          dataOfMonth.push(newDay);
-
-          monthTotalPrice+=Math.floor(priceTotal);
-          monthTotalAmount+=data.length;
-          var monthTotal={};
-          monthTotal['purchasedValue']=monthTotalPrice;
-          monthTotal['purchasedAmount']=monthTotalAmount;
-          monthTotal['month'] = month;//mm
-          
-//         console.log("Month Total Price-->"+ monthTotalPrice);
-   //      console.log("Month Total Amount -->"+ monthTotalAmount);
-         
-          counter++;
-          newCounter++;
-          if(newCounter<newdate) getDateData(newCounter);
-          if(newCounter>=newdate){
-//            console.log('month data is ' + dataOfMonth);
-            renderDates(dataOfMonth);
-          } 
-          if(counter==(newdate-1)) {console.log();}
-          });          
-        } 
-}
-
-
-function renderDates(datesArray){
-    //console.log(datesArray);
-    document.getElementById('showDate').innerHTML="";
-    for(var j=0; j<datesArray.length;j++){
-      var price=Math.floor( datesArray[j].purchasedValue);
-      // do something with it on the page
-     
-
-    var htmlToAdd=  '<div class="col-xs-4 col-sm-3 col-md-2 centered">'+
-             '<div class="showdate" id="'+j+'">'+
-               '<span id="showdate'+j+'" class="circle">'+'</span>'+
-               '<h4>'+'$'+price+'</h4>'+
-               '<h5>'+nowmonth+'-'+datesArray[j].date+'-15'+'</h5>'+
-               '<p>'+datesArray[j].purchasedAmount+' things</p>'+
-             '</div>'+
-         '</div>' 
-    
-      jQuery("#showDate").append(htmlToAdd);
-      if(price>100){
-          $('#showdate' + j).css({'width': '60px', 'height': '60px'});
-        }else if(price<=100){
-          var radius = Math.floor(price/100*30 + 30);
-//          console.log('radius'+radius);
-          $('#showdate' + j).css({'width': radius+'px', 'height': radius+'px'});
-        }
-        
-        //var queryDate = year + '-' + nowmonth + '-'+ dateInMonth[j];
-        //console.log('queryDate'+queryDate);
-    }
-
-    $( '.showdate').click(function(){
-            var id= $(this).attr('id');
-            var num=parseInt(id);
-            //console.log('num'+num);
- 
-            var queryDate = year + '-' + nowmonth + '-'+ dateInMonth[num];
-//             console.log('queryDate'+queryDate);
-             //console.log('queryDate in function'+queryDate);
-            getData(queryDate);
-         });
-
-}
-function daysInMonth(month,year) {
-    return new Date(year, month, 0).getDate();
-}
-//----------------------------------------------------------show month-----------------------------------
-
-
 //----------------------------------------------------------google map show places-----------------------------------
+var renderMap= function(spends){
+  var mapOptions = {
+    center: new google.maps.LatLng(spends[0].location.geo[1],spends[0].location.geo[0]), // NYC
+    zoom: 10,
+    mapTypeId: google.maps.MapTypeId.ROADMAP
+  };
+  map = new google.maps.Map(document.getElementById("map-canvas"), mapOptions);
+}
+
 var renderPlaces = function(spends) {
   var infowindow =  new google.maps.InfoWindow({
       content: ''
   });
-
-  // first clear any existing markers, because we will re-add below
-      clearMarkers();
-      markers = [];
-      
-      for(var i=0;i<spends.length;i++){
-
-        var latLng = {
-          lat: spends[i].location.geo[1], 
-          lng: spends[i].location.geo[0]
-        }
-
-        // make and place map maker.
-        var marker = new google.maps.Marker({
-            map: map,
-            position: latLng,
-            title : spends[i].price+ "<br>" + spends[i].shop + "<br>" + spends[i].location.name
-        });
-
-        bindInfoWindow(marker, map, infowindow, '<b>'+spends[i].price + "</b> ("+spends[i].shop+") <br>" + spends[i].location.name);
-
-        markers.push(marker);
-      }
-      
-      renderSpends(spends);
-      setChartDefaults();
-      buildDoughnutChart(spends);
+  clearMarkers();
+  markers = [];
   
+  for(var i=0;i<spends.length;i++){
+
+    var latLng = {
+      lat: spends[i].location.geo[1], 
+      lng: spends[i].location.geo[0]
+    }
+
+    // make and place map maker.
+    var marker = new google.maps.Marker({
+        map: map,
+        position: latLng,
+        title : spends[i].price+ "<br>" + spends[i].shop + "<br>" + spends[i].location.name
+    });
+
+    bindInfoWindow(marker, map, infowindow, '<b> $'+spends[i].price + "</b> ("+spends[i].note+") <br>" + spends[i].location.name);
+
+    markers.push(marker);
+    console.log(markers);
+  }
+  
+  renderSpends(spends); 
 }
 var bindInfoWindow = function(marker, map, infowindow, html) {
     google.maps.event.addListener(marker, 'click', function() {
@@ -274,8 +176,6 @@ function renderSpends(spends){
            $('.simpleClass').css({display:'none'});
       }
 //---------------delete btn-------------------------------------------------------
-    
-
       $('button').on('click', function(e){
          e.preventDefault();
         var id = $(this).data('id');
@@ -284,140 +184,5 @@ function renderSpends(spends){
      })
      
 }
-
-//----------------------------see other month----------------------------------------
-
-//--------------chart----------------------------------
-
-  function setChartDefaults(){
-  // make it responsive
-  Chart.defaults.global.responsive = true;
-  // set the default line
-  Chart.defaults.global.scaleLineColor = '#fff';
-  // set the font family
-  Chart.defaults.global.scaleFontFamily = "'Quattrocento Sans', 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif";
-  // set the font color
-  Chart.defaults.global.scaleFontColor = "#fff";
-}
-
-
-//--------------------------------------------
-function buildDoughnutChart(spends){
-
-  //document.getElementById('#doughnutChartLegend').innerHTML="";
-  $('#doughnutChartLegend').empty();
-  var eatingTotal=0
-  var foodTotal=0;
-  var drinkTotal = 0;
-  var rentalTotal=0;
-  var livingTotal=0;
-  var transportTotal=0;
-  var entertainmentTotal=0;
-  var shoppingTotal = 0;
-  
-  for(var i=0;i<spends.length;i++){
-    if(spends[i].category=='drink') {
-      drinkTotal+=spends[i].price;
-    }else if(spends[i].category=='food') {
-      foodTotal+=spends[i].price;
-    }
-    else if(spends[i].category=='eating') {
-      eatingTotal+=spends[i].price;
-    }
-    else if(spends[i].category=='rental'){
-      rentalTotal+=spends[i].price;
-    }
-    else if(spends[i].category=='living') {
-      livingTotal+=spends[i].price;
-    }
-    else if(spends[i].category=='transport'){
-      transportTotal+=spends[i].price;
-    }
-    else if(spends[i].category=='entertainment') {
-      entertainmentTotal+=spends[i].price;
-    }
-    else if(spends[i].category=='shopping') {
-      shoppingTotal+=spends[i].price;
-    }
-
-  } 
-
-  // let's call a function to render these counts on the page
-  renderCounts(eatingTotal,drinkTotal);
-  //foodTotal,rentalTotal, livingTotal, transportTotal, entertainmentTotal, shoppingTotal
-
-  // data is an array of objects
-  // each holds the value and color of a segment of the chart
-  var data = [
-      {
-          value: eatingTotal,
-          color:"#d86b94",
-          label: "Eating"
-      },
-      {
-          value: foodTotal, 
-          color: "#f68680",
-          label: "Food"
-      },
-      {
-          value: drinkTotal, 
-          color: "#f9a160",
-          label: "Drink"
-      },
-      {
-          value: rentalTotal, 
-          color: "#efd232",
-          label: "Rental"
-      },
-      {
-          value: livingTotal, 
-          color: "#f9a160",
-          label: "Drink"
-      }, 
-      {
-          value: transportTotal, 
-          color: "#82a9f9",
-          label: "Transport"
-      },
-      {
-          value: entertainmentTotal, 
-          color: "#82d4f9",
-          label: "Entertainment"
-      },
-      {
-          value: shoppingTotal, 
-          color: "#82f9cb",
-          label: "Shopping"
-      } 
-
-  ]
-
-  // http://www.chartjs.org/docs/#doughnut-pie-chart-chart-options
-  var options = {
-     segmentShowStroke : false,
-     legendTemplate : "<ul class=\"<%=name.toLowerCase()%>-legend\"><% for (var i=0; i<segments.length; i++){%><li><span style=\"background-color:<%=segments[i].fillColor%>\"></span><%if(segments[i].label){%><%=segments[i].label%><%}%></li><%}%></ul>"    
-  } 
-
-  // first, get the context of the canvas where we're drawing the chart
-  var ctx = document.getElementById("doughnutChart").getContext("2d");
-  
-  var myDoughnutChart = new Chart(ctx).Doughnut(data,options);  
-  // create the legend
-  var chartLegend = myDoughnutChart.generateLegend();
-  // append it above the chart
-  $('#doughnutChartLegend').append(chartLegend);
-}
-
-function renderCounts(eatingTotal,drinkTotal){
-  document.getElementById('eatingCount').innerHTML = '$'+eatingTotal;
-  document.getElementById('drinkCount').innerHTML = '$'+ drinkTotal;
-
-}
-
-
 //--------------------------------------------------------------------------------------------
-//$( "#btn-photo" ).click(takePicture());
-//document.getElementById('btn-photo').addEventListener('click', renderFoods);
-
 google.maps.event.addDomListener(window, 'load', init);
-document.getElementById('see-month').addEventListener('click', showMonth(nowmonth));

@@ -28,7 +28,7 @@ var multipartMiddleware = multipart();
 
 //-------------------------------------------------------------------------------
 router.get('/', function(req, res) {
-  res.render('input.html')
+  res.render('result.html')
 });
 
 // simple route to show an HTML page

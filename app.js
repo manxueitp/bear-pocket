@@ -22,6 +22,7 @@ app.db = mongoose.connect(process.env.MONGOLAB_URI);
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'html');
 app.set('layout','layout');
+//app.set('partials', {foo: 'foo'});
 app.engine('html', require('hogan-express'));;
 
 // uncomment after placing your favicon in /public
@@ -42,8 +43,13 @@ app.use(function(req, res, next) {
   next(err);
 });
 
+// //render template
+// app.get ('/', function(req,res){
+//   res.locals = name: 'Andrew'
+//   res.render ('template', partials: {message: 'message'});
+// });
+  
 // error handlers
-
 // development error handler
 // will print stacktrace
 if (app.get('env') === 'development') {

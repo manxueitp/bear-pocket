@@ -30,7 +30,7 @@ var renderLocation=function(){
         var latlng={lat: lat, lng: long};
  
         var mapElem = document.getElementById('map');
-        mapElem.innerHTML = '<img src="http://maps.googleapis.com/maps/api/staticmap?markers=' + lat + ',' + long + '&zoom=20&size=500x300&sensor=false" />';         
+        mapElem.innerHTML = '<img src="http://maps.googleapis.com/maps/api/staticmap?markers=' + lat + ',' + long + '&zoom=15&size=500x300&sensor=false" />';         
         
         //get name of location
         geocoder.geocode({'location': latlng}, function(results, status) {
@@ -50,9 +50,6 @@ var renderLocation=function(){
         function errorCallback(e) {
           alert(e);
         }
-
-        
-
       } else {
         alert("Geolocation is not supported by this browser.");
       }
