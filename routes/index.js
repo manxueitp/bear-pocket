@@ -36,6 +36,10 @@ router.get('/add-spend', function(req,res){
   res.render('input.html')
 })
 
+router.get('/view-today', function(req,res){
+  res.render('today.html')
+})
+
 router.get('/submit-spend', function(req,res){
   res.render('result.html')
 })

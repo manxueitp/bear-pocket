@@ -1168,3 +1168,19 @@ h5{
   
   margin-bottom:10px;
 }
+
+/***************************/
+/*today view*/
+/***************************/
+.today-card{
+  display: block;
+  width: 96%;
+  margin: 5px, auto;
+  background: #415177;
+
+
+}
+
+.today-map{
+  width: 100%;
+}

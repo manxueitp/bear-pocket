@@ -13,8 +13,6 @@ var nowmonth = dateFormat(now,"mm");
 var monthTotalPrice=0;
 var monthTotalAmount=0;
 //var happypointTotal=0;
-var dateInMonth=['01','02','03','04','05','06','07','08','09','10','11','12','13','14','15','16','17','18','19','20','21','22','23','24','25','26','27','28','29','30','31'];
-
 //so slow to grab current location from google map api, so it's better to use user's spend data to locate their location.
 // function getCurrentMap(){
 //   if(navigator.geolocation){
@@ -51,19 +49,19 @@ var getData = function(date){
     dataType : 'json',
     success : function(response) {
       var spends = response.spends;
-      renderMap(spends);
+      renderMap(spends,"map-canvas");
       renderPlaces(spends);
     }
   })  
 }
 //----------------------------------------------------------google map show places-----------------------------------
-var renderMap= function(spends){
+var renderMap= function(spends,idname){
   var mapOptions = {
     center: new google.maps.LatLng(spends[0].location.geo[1],spends[0].location.geo[0]), // NYC
     zoom: 10,
     mapTypeId: google.maps.MapTypeId.ROADMAP
   };
-  map = new google.maps.Map(document.getElementById("map-canvas"), mapOptions);
+  map = new google.maps.Map(document.getElementById(idname), mapOptions);
 }
 
 var renderPlaces = function(spends) {

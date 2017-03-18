@@ -1,21 +1,26 @@
 function init() {
-  
-  var mapOptions = {
-    center: new google.maps.LatLng(40.74649,-74.0094), // NYC
-    zoom: 10,
-    mapTypeId: google.maps.MapTypeId.ROADMAP
-  };
-
-  map = new google.maps.Map(document.getElementById("map-canvas"), mapOptions);
   getData(today);
 
-  $(".showbar").hide();
-  $("#see-month").show();
+  // $(".showbar").hide();
+  // $("#see-month").show();
 
-  $('#see-month').click(function(){
-    $(".showbar").slideToggle();
-    $("#see-month").show();
-  });
+  // $('#see-month').click(function(){
+  //   $(".showbar").slideToggle();
+  //   $("#see-month").show();
+  // });
+}
+
+//get today's data
+var getData = function(date){
+   jQuery.ajax({
+    url : '/api/get/'+date,
+    dataType : 'json',
+    success : function(response) {
+      var spends = response.spends;
+      renderMap(spends,"today-map");
+      renderPlaces(spends);
+    }
+  })  
 }
 
 //--------------------------------------------
