@@ -1,3 +1,7 @@
+//var priceTotalMonth=[];
+var monthTotalPrice=0;
+var monthTotalAmount=0;
+
 var showMonth=function(month){
   //month in this function is nowmonth(mm)
   var datenum=daysInMonth(month,year);

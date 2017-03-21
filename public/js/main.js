@@ -1,7 +1,4 @@
-// CUSTOM JS FILE //
-var map; // global map variable
-var markers = []; // array to hold map markers
-var icon;
+var icon=[];
 var now=new Date();
 var month=dateFormat(now,"mmmm");
 var date= dateFormat(now,"dd");
@@ -9,178 +6,152 @@ var year=dateFormat(now,"yyyy");
 var time=dateFormat(now,"isoTime");
 var today=dateFormat(now,"isoDate");
 var nowmonth = dateFormat(now,"mm");
-//var priceTotalMonth=[];
-var monthTotalPrice=0;
-var monthTotalAmount=0;
-//var happypointTotal=0;
-//so slow to grab current location from google map api, so it's better to use user's spend data to locate their location.
-// function getCurrentMap(){
-//   if(navigator.geolocation){
-//     navigator.geolocation.watchPosition(successCallback, errorCallback, {});
-//     function successCallback(currentPosition) {
-//       var lat = currentPosition.coords.latitude;
-//       var lng = currentPosition.coords.longitude;
-//       console.log(lat);
-//       console.log(lng);
-//       var mapOptions = {
-//         center: new google.maps.LatLng(lat,lng), 
-//         zoom: 10,
-//         mapTypeId: google.maps.MapTypeId.ROADMAP
-//       };
-//       map = new google.maps.Map(document.getElementById("map-canvas"), mapOptions);
-//     }
-//     function errorCallback(e) {
-//       alert(e);
-//     }
-//   } else {
-//     alert("Geolocation is not supported by this browser.");
-//   }
-// }
 
-function init() {
-  //getCurrentMap();
-  getData(today);
-}
-//______________________________________________________________________________________
-//get today's data
-var getData = function(date){
-   jQuery.ajax({
-    url : '/api/get/'+date,
-    dataType : 'json',
-    success : function(response) {
-      var spends = response.spends;
-      renderMap(spends,"map-canvas");
-      renderPlaces(spends);
+//get icon (category) of current spend(spinds[i])
+function renderIcon(spend){
+  if(spend){
+    if(spend.category=="eating"){
+      icon= "fa-cutlery";
+    }else if (spend.category=="rental"){
+      icon="fa-home";
+    }else if (spend.category=="drink"){
+      icon="fa-coffee";
     }
-  })  
-}
-//----------------------------------------------------------google map show places-----------------------------------
-var renderMap= function(spends,idname){
-  var mapOptions = {
-    center: new google.maps.LatLng(spends[0].location.geo[1],spends[0].location.geo[0]), // NYC
-    zoom: 10,
-    mapTypeId: google.maps.MapTypeId.ROADMAP
-  };
-  map = new google.maps.Map(document.getElementById(idname), mapOptions);
-}
-
-var renderPlaces = function(spends) {
-  var infowindow =  new google.maps.InfoWindow({
-      content: ''
-  });
-  clearMarkers();
-  markers = [];
-  
-  for(var i=0;i<spends.length;i++){
-
-    var latLng = {
-      lat: spends[i].location.geo[1], 
-      lng: spends[i].location.geo[0]
+    else if (spend.category=="food"){
+      icon="fa-beer"
     }
-
-    // make and place map maker.
-    var marker = new google.maps.Marker({
-        map: map,
-        position: latLng,
-        title : spends[i].price+ "<br>" + spends[i].shop + "<br>" + spends[i].location.name
-    });
-
-    bindInfoWindow(marker, map, infowindow, '<b> $'+spends[i].price + "</b> ("+spends[i].note+") <br>" + spends[i].location.name);
-
-    markers.push(marker);
-    console.log(markers);
+    else if (spend.category=="living"){
+      icon="fa-bed";
+    }
+    else if (spend.category=="transport"){
+     icon="fa-subway";
+    }
+    else if (spend.category=="entertainment"){
+     icon="fa-gamepad";
+    }
+    else if (spend.category=="shopping"){
+     icon="fa-shopping-cart";
+    }
+    else{
+     icon= "fa-cullery";
+    }  
+  }else{
+    return;
   }
-  
-  renderSpends(spends); 
-}
-var bindInfoWindow = function(marker, map, infowindow, html) {
-    google.maps.event.addListener(marker, 'click', function() {
-        infowindow.setContent(html);
-        infowindow.open(map, marker);
-    });
 }
 
-function clearMarkers(){
-  for (var i = 0; i < markers.length; i++) {
-    markers[i].setMap(null); // clears the markers
+//get total price of spends
+function getTotalPrice(spends){
+  var eatingTotal=0
+  var foodTotal=0;
+  var drinkTotal = 0;
+  var rentalTotal=0;
+  var livingTotal=0;
+  var transportTotal=0;
+  var entertainmentTotal=0;
+  var shoppingTotal = 0;
+  var priceInAll = 0;
+  var totalPrice = {};
+
+  for(var i=0;i<spends.length;i++){
+    if(spends[i].category=='drink') {
+      drinkTotal+=spends[i].price;
+      priceInAll+=spends[i].price;
+      totalPrice.drinkTotal = drinkTotal;
+    }
+    else if(spends[i].category=='food') {
+      foodTotal+=spends[i].price;
+      priceInAll+=spends[i].price;
+      totalPrice.foodTotal = foodTotal;
+    }
+    else if(spends[i].category=='eating') {
+      eatingTotal+=spends[i].price;
+      priceInAll+=spends[i].price;
+      totalPrice.eatingTotal = eatingTotal;
+    }
+    else if(spends[i].category=='rental'){
+      rentalTotal+=spends[i].price;
+      priceInAll+=spends[i].price;
+      totalPrice.rentalTotal = rentalTotal;
+    }
+    else if(spends[i].category=='living') {
+      livingTotal+=spends[i].price;
+      priceInAll+=spends[i].price;
+      totalPrice.livingTotal = livingTotal;
+    }
+    else if(spends[i].category=='transport'){
+      transportTotal+=spends[i].price;
+      priceInAll+=spends[i].price;
+      totalPrice.transportTotal = transportTotal;
+    }
+    else if(spends[i].category=='entertainment') {
+      entertainmentTotal+=spends[i].price;
+      priceInAll+=spends[i].price;
+      totalPrice.entertainmentTotal = entertainmentTotal;
+    }
+    else if(spends[i].category=='shopping') {
+      shoppingTotal+=spends[i].price;
+      priceInAll+=spends[i].price;
+      totalPrice.shoppingTotal = shoppingTotal;
+    }
   } 
+  totalPrice.priceInAll = priceInAll;
+  console.log(totalPrice);
+  return totalPrice; 
 }
-//--------------------------------------------render spend----------------------------------------------
-function renderSpends(spends){
-    //console.log(spends);
-      document.getElementById('cd-timeline').innerHTML="";
-      for(var i=0;i<spends.length;i++){
-          if(spends[i].category=="eating"){
-            icon= "fa-cutlery";
-          }else if (spends[i].category=="rental"){
-            icon="fa-home";
-          }else if (spends[i].category=="drink"){
-            icon="fa-coffee";
-          }
-          else if (spends[i].category=="food"){
-            icon="fa-beer"
-          }
-          else if (spends[i].category=="living"){
-            icon="fa-bed";
-          }
-          else if (spends[i].category=="transport"){
-           icon="fa-subway";
-          }
-          else if (spends[i].category=="entertainment"){
-           icon="fa-gamepad";
-          }
-          else if (spends[i].category=="shopping"){
-           icon="fa-shopping-cart";
-          }
-          else{
-           icon= "fa-cullery";
-          }
-          var happypoint= spends[i].mood*10;
-          
-          //console.log("spends[i].month="+spends[i].month);
-          //console.log("spends[i].category="+spends[i].category);
-           
-         
-          var htmlToAdd= '<div class="cd-timeline-block wow fadeInUp animated">'+
-                '<div class="cd-timeline-img'+ ' cd-'+spends[i].category+' cd-timeline-block wow fadeInLeft animated">'+
-                  '<i class="fa '+icon+' icon"></i>'+
-                '</div>'+
 
-                '<div class="cd-timeline-content">'+
-                  '<div class="row">'+
-                  '<span class="cd-date">'+spends[i].month+'.'+spends[i].sdate+'<br/>'+spends[i].spendtime+'</span>'+
-                    '<div class="col-sm-6 words">'+
-                    '<h1 class="price-words">$'+spends[i].price+'</h1>'+
-                    '<div><img class="imgbar" src=img/happy.png><div class="purple-bar"><div class="purple-bar-container" id="bar'+[i]+'" style="width: 0%;"></div></div><h1>'+happypoint+'% Happiness'+'</h1></div>'+
-                    '<p>'+spends[i].note+'</p>'+
-                    '<p>'+spends[i].location.name+'</p>'
-                    +'</div>'+
-                    
-                    '<div class="col-sm-6 centered ">'+
-                     '<img class="ifShow" src='+spends[i].url+' width="400">'+
-                    '</div>'+
-                    '<button class="btn-delete margin-top-5 deletebtn wow fadeInLeft animated" data-id="'+spends[i]._id+'" id="btn['+i+']"><a>Delete</a></button>'+
-                  '</div>'+
-                '</div>'+ 
-              '</div> '+
-            '</div>'+
-            '</div>';
-
-          jQuery("#cd-timeline").append(htmlToAdd);
-           $('#bar' + [i]).css('width', happypoint + '%');
-           if(spends[i].url=''){
-            $('.ifShow').css({display:'none'});
-           }
-           $('.simpleClass').css({display:'none'});
-      }
-//---------------delete btn-------------------------------------------------------
-      $('button').on('click', function(e){
-         e.preventDefault();
-        var id = $(this).data('id');
-        $.get('/api/delete/' + id);
-        $(this).parent().remove();
-     })
-     
+//get data need when drawing the Doughnut
+function getDoughnutData(totalPrice){
+  var drink_data = {}, food_data = {}, eating_data = {}, rental_data = {}, living_data = {}, transport_data = {}, entertainment_data={}, shopping_data={};
+  var data = [];
+  if(totalPrice.drinkTotal){
+    drink_data.value = totalPrice.drinkTotal;
+    drink_data.color = "#f9a160";
+    drink_data.label = "Drink";
+    data.push(drink_data);
+  }
+  if(totalPrice.eatingTotal){
+    eating_data.value = totalPrice.eatingTotal;
+    eating_data.color = "#d86b94";
+    eating_data.label = "Meal";
+    data.push(eating_data);
+  }
+  if(totalPrice.foodTotal){
+    food_data.value = totalPrice.foodTotal;
+    food_data.color = "#f68680";
+    food_data.label = "Food";
+    data.push(food_data);
+  }
+  if(totalPrice.rentalTotal){
+    rental_data.value = totalPrice.rentalTotal;
+    rental_data.color = "#efd232";
+    rental_data.label = "Rental";
+    data.push(rental_data);
+  }
+  if(totalPrice.livingTotal){
+    living_data.value = totalPrice.livingTotal;
+    living_data.color = "#f9a160";
+    living_data.label = "living";
+    data.push(living_data);
+  }
+  if(totalPrice.transportTotal){
+    transport_data.value = totalPrice.transportTotal;
+    transport_data.color = "#82a9f9";
+    transport_data.label = "Transport";
+    data.push(transport_data);
+  }
+  if(totalPrice.entertainmentTotal){
+    entertainment_data.value = totalPrice.entertainmentTotal;
+    entertainment_data.color = "#82d4f9";
+    entertainment_data.label = "Entertainment";
+    data.push(entertainment_data);
+  }
+  if(totalPrice.shoppingTotal){
+    shopping_data.value = totalPrice.shoppingTotal;
+    shopping_data.color = "#82f9cb";
+    shopping_data.label = "Shopping";
+    data.push(shopping_data);
+  }
+  return data;
 }
-//--------------------------------------------------------------------------------------------
-google.maps.event.addDomListener(window, 'load', init);
+

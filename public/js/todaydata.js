@@ -1,13 +1,5 @@
 function init() {
   getData(today);
-
-  // $(".showbar").hide();
-  // $("#see-month").show();
-
-  // $('#see-month').click(function(){
-  //   $(".showbar").slideToggle();
-  //   $("#see-month").show();
-  // });
 }
 
 //get today's data
@@ -17,102 +9,22 @@ var getData = function(date){
     dataType : 'json',
     success : function(response) {
       var spends = response.spends;
-      renderMap(spends,"today-map");
+      var totalPrice = getTotalPrice(spends);
+      renderMap(spends,"today-map",12);
       renderPlaces(spends);
+      buildDoughnutChart(spends,totalPrice);
     }
   })  
 }
 
-//--------------------------------------------
-function buildDoughnutChart(spends){
-
-  //document.getElementById('#doughnutChartLegend').innerHTML="";
+function buildDoughnutChart(spends,totalPrice){
   $('#doughnutChartLegend').empty();
-  var eatingTotal=0
-  var foodTotal=0;
-  var drinkTotal = 0;
-  var rentalTotal=0;
-  var livingTotal=0;
-  var transportTotal=0;
-  var entertainmentTotal=0;
-  var shoppingTotal = 0;
-  
-  for(var i=0;i<spends.length;i++){
-    if(spends[i].category=='drink') {
-      drinkTotal+=spends[i].price;
-    }else if(spends[i].category=='food') {
-      foodTotal+=spends[i].price;
-    }
-    else if(spends[i].category=='eating') {
-      eatingTotal+=spends[i].price;
-    }
-    else if(spends[i].category=='rental'){
-      rentalTotal+=spends[i].price;
-    }
-    else if(spends[i].category=='living') {
-      livingTotal+=spends[i].price;
-    }
-    else if(spends[i].category=='transport'){
-      transportTotal+=spends[i].price;
-    }
-    else if(spends[i].category=='entertainment') {
-      entertainmentTotal+=spends[i].price;
-    }
-    else if(spends[i].category=='shopping') {
-      shoppingTotal+=spends[i].price;
-    }
 
-  } 
+  renderCounts(totalPrice);
+  var data = [];
 
-  // let's call a function to render these counts on the page
-  renderCounts(eatingTotal,drinkTotal);
-  //foodTotal,rentalTotal, livingTotal, transportTotal, entertainmentTotal, shoppingTotal
-
-  // data is an array of objects
-  // each holds the value and color of a segment of the chart
-  var data = [
-      {
-          value: eatingTotal,
-          color:"#d86b94",
-          label: "Eating"
-      },
-      {
-          value: foodTotal, 
-          color: "#f68680",
-          label: "Food"
-      },
-      {
-          value: drinkTotal, 
-          color: "#f9a160",
-          label: "Drink"
-      },
-      {
-          value: rentalTotal, 
-          color: "#efd232",
-          label: "Rental"
-      },
-      {
-          value: livingTotal, 
-          color: "#f9a160",
-          label: "Drink"
-      }, 
-      {
-          value: transportTotal, 
-          color: "#82a9f9",
-          label: "Transport"
-      },
-      {
-          value: entertainmentTotal, 
-          color: "#82d4f9",
-          label: "Entertainment"
-      },
-      {
-          value: shoppingTotal, 
-          color: "#82f9cb",
-          label: "Shopping"
-      } 
-
-  ]
+  var data = getDoughnutData(totalPrice);
+  console.log(data);
 
   // http://www.chartjs.org/docs/#doughnut-pie-chart-chart-options
   var options = {
@@ -130,9 +42,9 @@ function buildDoughnutChart(spends){
   $('#doughnutChartLegend').append(chartLegend);
 }
 
-function renderCounts(eatingTotal,drinkTotal){
-  document.getElementById('eatingCount').innerHTML = '$'+eatingTotal;
-  document.getElementById('drinkCount').innerHTML = '$'+ drinkTotal;
+function renderCounts(totalPrice){
+  document.getElementById('eatingCount').innerHTML = '$'+ totalPrice.eatingTotal;
+  document.getElementById('drinkCount').innerHTML = '$'+ totalPrice.drinkTotal;
 
 }
 
@@ -150,5 +62,5 @@ function setChartDefaults(){
 }
 
 google.maps.event.addDomListener(window, 'load', init);
-document.getElementById('see-month').addEventListener('click', showMonth(nowmonth));
+
 

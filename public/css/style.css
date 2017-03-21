@@ -944,17 +944,6 @@ li span{
   background: #82f9cb;
 }
 
-.chart-container{
-  background: #415177;
-  width: 100%;
-  height: 500px;
-  padding: 12px;
-}
-.margin-left-30{
-   margin-left: 30px;
-}
-
-
 /***************************/
 /*take photo*/
 /***************************/
@@ -1054,7 +1043,9 @@ label > input[type=file]{ /* HIDE RADIO */
 /*see month*/
 /***************************/
 .btn-p{
-    display: none;
+    display: block;
+    position: absolute;
+    bottom: 0;
     width: 100%;
     height: 100%;
     text-decoration: none;
@@ -1172,15 +1163,38 @@ h5{
 /***************************/
 /*today view*/
 /***************************/
+.today-container{
+  display: block;
+  width: 100%;
+  height:600px;
+  position: absolute;
+  top: 56px;
+}
 .today-card{
+  position: relative;
   display: block;
   width: 96%;
-  margin: 5px, auto;
+  height:500px;
+  margin: 8px auto;
   background: #415177;
-
-
+  border-radius: 4px;
+  -webkit-box-shadow: 0px 1px 2px 1px rgba(153,153,153,0.6);
+  -moz-box-shadow: 0px 1px 2px 1px rgba(153,153,153,0.6);
+  box-shadow: 0px 1px 2px 1px rgba(153,153,153,0.6);
 }
 
-.today-map{
+ #today-map{ 
+  height:140px; 
+  position: relative;
+  border-radius: 4px;
+}
+
+#today-map img { max-width: none;}
+
+.chart-container{
   width: 100%;
+  padding: 12px;
+}
+.margin-left-30{
+   margin-left: 30px;
 }

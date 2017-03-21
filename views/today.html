@@ -25,34 +25,26 @@
       Today's expense
       <a href="/add-spend" class="btn-add">+</a>
     </div>
-  
-    <div  class="today-card wow fadeIndown animated">
-      <div id="today-map"></div>
-    </div>
 
-    <section class="content2 wow fadeIndown animated" id="first-section">
-      <div class="title-new title-index wow fadeInUp animated">How much I spend on today?</div>
-        
-      <div class="chart-container ">
-        <div class="col-md-4">
-          <h4>How I spend in each category(Total)</h4>
+    
+    <div  class="today-container wow fadeIndown animated">
+      <div  class="today-card wow fadeIndown animated">
+        <div id="today-map"></div>
+        <div>
+        <div class="chart-container ">
           <div class="stats-holder">
             <span id="eatingCount"></span> Eating Spend
           </div>
           <div class="stats-holder">
             <span id="drinkCount"></span> Drink Spend
           </div>
-          <div class="clear-fix"></div>
-          <div id="doughnutChartLegend" class="legend"></div>
-          <canvas id="doughnutChart"></canvas>
-        </div>
+        <div class="clear-fix"></div>
+        <div id="doughnutChartLegend" class="legend"></div>
+        <canvas id="doughnutChart"></canvas>
       </div>
+      </div>
+    </div>
 
-      <div class="row">
-        <div class="col-xs-12 centered">
-         <button class="btn-p" id="see-month">See this month</button> 
-        </div>
-      </div>
 
       <div class="row">
         <div class="showbar" id="showDate">
@@ -74,6 +66,7 @@
     <!-- CUSTOM JS -->
     <script src="js/dateformatting.js"></script> 
     <script src="js/main.js"></script>
+    <script src="js/googlemap.js"></script>
     <script src="js/todaydata.js"></script>
     <!-- CHART JS -->
     <script src="js/Chart.js"></script>
