@@ -22,9 +22,10 @@ function buildDoughnutChart(spends,totalPrice){
 
   renderCounts(totalPrice);
   var data = [];
-
+  
   var data = getDoughnutData(totalPrice);
-  console.log(data);
+  sorted_data = sortByPrice(data, 'value');
+  //console.log(sorted_data);
 
   // http://www.chartjs.org/docs/#doughnut-pie-chart-chart-options
   var options = {
@@ -35,7 +36,7 @@ function buildDoughnutChart(spends,totalPrice){
   // first, get the context of the canvas where we're drawing the chart
   var ctx = document.getElementById("doughnutChart").getContext("2d");
   
-  var myDoughnutChart = new Chart(ctx).Doughnut(data,options);  
+  var myDoughnutChart = new Chart(ctx).Doughnut(sorted_data,options);  
   // create the legend
   var chartLegend = myDoughnutChart.generateLegend();
   // append it above the chart

@@ -42,15 +42,15 @@ function renderIcon(spend){
 
 //get total price of spends
 function getTotalPrice(spends){
-  var eatingTotal=0
-  var foodTotal=0;
-  var drinkTotal = 0;
-  var rentalTotal=0;
-  var livingTotal=0;
-  var transportTotal=0;
-  var entertainmentTotal=0;
-  var shoppingTotal = 0;
-  var priceInAll = 0;
+  var eatingTotal=0.0;
+  var foodTotal=0.0;
+  var drinkTotal = 0.0;
+  var rentalTotal=0.0;
+  var livingTotal=0.0;
+  var transportTotal=0.0;
+  var entertainmentTotal=0.0;
+  var shoppingTotal = 0.0;
+  var priceInAll = 0.0;
   var totalPrice = {};
 
   for(var i=0;i<spends.length;i++){
@@ -96,7 +96,6 @@ function getTotalPrice(spends){
     }
   } 
   totalPrice.priceInAll = priceInAll;
-  console.log(totalPrice);
   return totalPrice; 
 }
 
@@ -155,3 +154,10 @@ function getDoughnutData(totalPrice){
   return data;
 }
 
+function sortByPrice(data, keyname){
+  var items = data;
+  items.sort(function(a, b) {
+    return parseFloat(a[keyname]) - parseFloat(b[keyname]);
+  }).reverse();
+  return items;
+}
