@@ -1,4 +1,4 @@
-var icon=[];
+var icons=[];
 var now=new Date();
 var month=dateFormat(now,"mmmm");
 var date= dateFormat(now,"dd");
@@ -9,6 +9,7 @@ var nowmonth = dateFormat(now,"mm");
 
 //get icon (category) of current spend(spinds[i])
 function renderIcon(spend){
+  console.log(spend);
   if(spend){
     if(spend.category=="eating"){
       icon= "fa-cutlery";
@@ -17,8 +18,8 @@ function renderIcon(spend){
     }else if (spend.category=="drink"){
       icon="fa-coffee";
     }
-    else if (spend.category=="food"){
-      icon="fa-beer"
+    else if (spend.category=="health"){
+      icon="fa-medkit"
     }
     else if (spend.category=="living"){
       icon="fa-bed";
@@ -33,8 +34,9 @@ function renderIcon(spend){
      icon="fa-shopping-cart";
     }
     else{
-     icon= "fa-cullery";
+     icon= "fa-cutlery";
     }  
+    return icon;
   }else{
     return;
   }
@@ -43,7 +45,7 @@ function renderIcon(spend){
 //get total price of spends
 function getTotalPrice(spends){
   var eatingTotal=0.0;
-  var foodTotal=0.0;
+  var healthTotal=0.0;
   var drinkTotal = 0.0;
   var rentalTotal=0.0;
   var livingTotal=0.0;
@@ -59,10 +61,10 @@ function getTotalPrice(spends){
       priceInAll+=spends[i].price;
       totalPrice.drinkTotal = drinkTotal;
     }
-    else if(spends[i].category=='food') {
-      foodTotal+=spends[i].price;
+    else if(spends[i].category=='health') {
+      healthTotal+=spends[i].price;
       priceInAll+=spends[i].price;
-      totalPrice.foodTotal = foodTotal;
+      totalPrice.healthTotal = healthTotal;
     }
     else if(spends[i].category=='eating') {
       eatingTotal+=spends[i].price;
@@ -101,7 +103,7 @@ function getTotalPrice(spends){
 
 //get data need when drawing the Doughnut
 function getDoughnutData(totalPrice){
-  var drink_data = {}, food_data = {}, eating_data = {}, rental_data = {}, living_data = {}, transport_data = {}, entertainment_data={}, shopping_data={};
+  var drink_data = {}, health_data = {}, eating_data = {}, rental_data = {}, living_data = {}, transport_data = {}, entertainment_data={}, shopping_data={};
   var data = [];
   if(totalPrice.drinkTotal){
     drink_data.value = totalPrice.drinkTotal;
@@ -115,11 +117,11 @@ function getDoughnutData(totalPrice){
     eating_data.label = "Meal";
     data.push(eating_data);
   }
-  if(totalPrice.foodTotal){
-    food_data.value = totalPrice.foodTotal;
-    food_data.color = "#f68680";
-    food_data.label = "Food";
-    data.push(food_data);
+  if(totalPrice.healthTotal){
+    health_data.value = totalPrice.healthTotal;
+    health_data.color = "#f68680";
+    health_data.label = "Healthy Care";
+    data.push(health_data);
   }
   if(totalPrice.rentalTotal){
     rental_data.value = totalPrice.rentalTotal;
@@ -129,7 +131,7 @@ function getDoughnutData(totalPrice){
   }
   if(totalPrice.livingTotal){
     living_data.value = totalPrice.livingTotal;
-    living_data.color = "#f9a160";
+    living_data.color = "#8486e5";
     living_data.label = "living";
     data.push(living_data);
   }

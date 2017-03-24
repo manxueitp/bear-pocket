@@ -19,9 +19,8 @@ var getData = function(date){
 function renderSpends(spends){
   document.getElementById('cd-timeline').innerHTML="";       
   for (var i=0;i<spends.length;i++) {
-    renderIcon(spends[i]);
+    var icon = renderIcon(spends[i]);
     var happypoint= spends[i].mood*10;
-
     var htmlToAdd= '<div class="cd-timeline-block wow fadeInUp animated">'+
           '<div class="cd-timeline-img'+ ' cd-'+spends[i].category+' cd-timeline-block wow fadeInLeft animated">'+
             '<i class="fa '+icon+' icon"></i>'+
