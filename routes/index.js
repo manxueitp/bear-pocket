@@ -61,12 +61,9 @@ router.post('/api/create/image', multipartMiddleware, function(req,res){
 
     
 //    console.log('the incoming files >> ' + JSON.stringify(req.files)); 
-//    console.log('the incoming data >> ' + JSON.stringify(req.body));
-    //console.log('the incoming image file >> ' + JSON.stringify(req.files.image));
-
+//   console.log('the incoming data >> ' + JSON.stringify(req.body));
+    console.log('the incoming image file >> ' + JSON.stringify(req.files.image.size));
     // pull out the information from the req.body
-    
-    
     var price = req.body.price;
     var stuffname = req.body.stuffname;
     var category = req.body.category;
@@ -91,7 +88,7 @@ router.post('/api/create/image', multipartMiddleware, function(req,res){
     var monthPurchased = currentYear + '-' + monthNumber;
     
     if(!category) category = "eating";
-    
+
     var spendObj = {
       price: price,
       stuffname: stuffname,
@@ -113,8 +110,7 @@ router.post('/api/create/image', multipartMiddleware, function(req,res){
     // location thing
     if(!location) return res.json({status:'ERROR', message: 'You are missing a required field or have submitted a malformed request.'})
 
-    geocoder.geocode(location, function (err,data) {
-
+    geocoder.geocode(location, function (err,data){
       if (!data || data==null || err || data.status == 'ZERO_RESULTS'){
         var error = {status:'ERROR', message: 'Error finding location'};
         return res.json({status:'ERROR', message: 'You are missing a required field or have submitted a malformed request.'})
@@ -127,72 +123,61 @@ router.post('/api/create/image', multipartMiddleware, function(req,res){
         geo: [lon,lat], 
         name: data.results[0].formatted_address 
       }
-     // -----location 
+    })//location end (file)
+
      
      //image thing (file)
-     
-      var filename = req.files.image.name; // actual filename of file
-      var path = req.files.image.path; // will be put into a temp directory
-      var mimeType = req.files.image.type; // image/jpeg or actual mime type
+    var filename = req.files.image.name; // actual filename of file
+    var path = req.files.image.path; // will be put into a temp directory
+    var mimeType = req.files.image.type; // image/jpeg or actual mime type
+   
+    var cleanedFileName = cleanFileName(filename);
+    fs.readFile(path, function(err, file_buffer){
 
-      var cleanedFileName = cleanFileName(filename);
-      fs.readFile(path, function(err, file_buffer){
+    // reference to the Amazon S3 Bucket
+    var s3bucket = new AWS.S3({params: {Bucket: awsBucketName}});
+    
+    var params = {
+      Key: cleanedFileName,
+      Body: file_buffer,
+      ACL: 'public-read',
+      ContentType: mimeType
+    };
 
-      // reference to the Amazon S3 Bucket
-      var s3bucket = new AWS.S3({params: {Bucket: awsBucketName}});
-      
-      // Set the bucket object properties
-      // Key == filename
-      // Body == contents of file
-      // ACL == Should it be public? Private?
-      // ContentType == MimeType of file ie. image/jpeg.
-      var params = {
-        Key: cleanedFileName,
-        Body: file_buffer,
-        ACL: 'public-read',
-        ContentType: mimeType
-      };
+      // Put the above Object in the Bucket
+    s3bucket.putObject(params, function(err, data) {
+      if (err) {
+        console.log(err)
+        return;
+      } else {
+        console.log("Successfully uploaded data to s3 bucket");
 
-        // Put the above Object in the Bucket
-      s3bucket.putObject(params, function(err, data) {
-        if (err) {
-          console.log(err)
-          return;
-        } else {
-          console.log("Successfully uploaded data to s3 bucket");
+        // now that we have the image
+        // we can add the s3 url our spend object from above
+        spendObj['url'] = s3Path + cleanedFileName;
+        console.log(spendObj['url']);
+       
+        var spend = new Spend(spendObj);
 
-          // now that we have the image
-          // we can add the s3 url our spend object from above
-          spendObj['url'] = s3Path + cleanedFileName;
-          console.log(spendObj['url']);
-         
-          var spend = new Spend(spendObj);
-
-          spend.save(function(err,data){
-            if(err){
-              var error = {
-                status: "ERROR",
-                message: err
-              }
-              return res.json(err)
+        spend.save(function(err,data){
+          if(err){
+            var error = {
+              status: "ERROR",
+              message: err
             }
-
-            var jsonData = {
-              status: "OK",
-              spend: data
-            }
-
-            //return res.json(jsonData);  
-            return res.redirect('/submit-spend');      
-          })
-
-        }
-
-      }); // end of putObject function
-     });// end of read file
-
-    })//location end (file)
-  })
+            return res.json(err)
+          }
+          var jsonData = {
+            status: "OK",
+            spend: data
+          }
+          //return res.json(jsonData);  
+          return res.redirect('/submit-spend');      
+        })//save new spend
+      }
+    }); // end of putObject function
+   });// end of read file
+})//end route
 
 function cleanFileName (filename) {
     
