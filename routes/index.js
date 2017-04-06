@@ -90,6 +90,8 @@ router.post('/api/create/image', multipartMiddleware, function(req,res){
     var datePurchased = currentYear + '-' + monthNumber + '-'+ sdate;
     var monthPurchased = currentYear + '-' + monthNumber;
     
+    if(!category) category = "eating";
+    
     var spendObj = {
       price: price,
       stuffname: stuffname,
