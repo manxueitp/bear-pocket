@@ -60,23 +60,17 @@ var defaultInput=function(){
   renderLocation();
 }
 //---------------------------------------------------------take photos by browser-----------------------------------
-
   function gotPic(event) {
-
-   
-        if(event.target.files.length == 1 && 
-           event.target.files[0].type.indexOf("image/") == 0) {
-            $("#display-img").attr("src",URL.createObjectURL(event.target.files[0]));
-            var imgURL=URL.revokeObjectURL(URL.createObjectURL(event.target.files[0]));
-
-        }
-  }
-   
+    if(event.target.files.length == 1 && 
+      event.target.files[0].type.indexOf("image/") == 0) {
+      $("#display-img").attr("src",URL.createObjectURL(event.target.files[0]));
+      var imgURL=URL.revokeObjectURL(URL.createObjectURL(event.target.files[0]));
+    }
+  }  
   function changeBar(){
     var changeValue = this.value*10+'% Happy';
     $(this).next().text(changeValue);   
   }
-
 //----------------------------------------------------------call function-------------------------
 
 window.addEventListener('load', defaultInput());

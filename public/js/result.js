@@ -47,8 +47,8 @@ function renderSpends(spends){
       '</div>';
     jQuery("#cd-timeline").append(htmlToAdd);
      $('#bar' + [i]).css('width', happypoint + '%');
-     if(spends[i].url=''){
-      $('.ifShow').css({display:'none'});
+     if(spends[i].url==''){
+      $('.ifShow').remove();
      }
      $('.simpleClass').css({display:'none'});         
   } 
