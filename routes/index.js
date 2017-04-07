@@ -58,8 +58,6 @@ router.get('/add-with-image', function(req,res){
 // /**----api/create/image-------------------------------------------------------------------------//
 
 router.post('/api/create/image', multipartMiddleware, function(req,res) {
-
-    
 //    console.log('the incoming files >> ' + JSON.stringify(req.files)); 
 //   console.log('the incoming data >> ' + JSON.stringify(req.body));
     console.log('the incoming image file >> ' + JSON.stringify(req.files.image.size));
@@ -86,6 +84,11 @@ router.post('/api/create/image', multipartMiddleware, function(req,res) {
     var timePurchased = currentYear + '-' + monthNumber + '-'+ sdate + 'T' + spendtime + '.000Z';
     var datePurchased = currentYear + '-' + monthNumber + '-'+ sdate;
     var monthPurchased = currentYear + '-' + monthNumber;
+
+    var size = req.files.image.size;
+    var filename = req.files.image.name; // actual filename of file
+    var path = req.files.image.path; // will be put into a temp directory
+    var mimeType = req.files.image.type; // image/jpeg or actual mime type
     
     if(!category) category = "eating";
 
@@ -114,6 +117,7 @@ router.post('/api/create/image', multipartMiddleware, function(req,res) {
       if (!data || data==null || err || data.status == 'ZERO_RESULTS'){
         var error = {status:'ERROR', message: 'Error finding location'};
         return res.json({status:'ERROR', message: 'You are missing a required field or have submitted a malformed request.'})
+        //change to a pop up alert
       }
 
       var lon = data.results[0].geometry.location.lng;
@@ -123,75 +127,65 @@ router.post('/api/create/image', multipartMiddleware, function(req,res) {
         geo: [lon,lat], 
         name: data.results[0].formatted_address 
       }
+
+      getImageUrl();
     })//location end (file)
-
-     //image thing (file)
-    var size = req.files.image.size;
-    var filename = req.files.image.name; // actual filename of file
-    var path = req.files.image.path; // will be put into a temp directory
-    var mimeType = req.files.image.type; // image/jpeg or actual mime type
-
+  
+  function getImageUrl(){
     if(size > 0){
-      var cleanedFileName = cleanFileName(filename);
-      //save image to S3 and get new spend
-      fs.readFile(path, function(err, file_buffer){
-        var s3bucket = new AWS.S3({params: {Bucket: awsBucketName}});
-        var params = {
-          Key: cleanedFileName,
-          Body: file_buffer,
-          ACL: 'public-read',
-          ContentType: mimeType
-        };
-        s3bucket.putObject(params, function(err, data) {
-          if (err) {
-            console.log(err)
-            return;
-          } 
-          else {
-            console.log("Successfully uploaded image to s3 bucket");
-            var url = s3Path + cleanedFileName;
-            spendObj['url'] = url; 
-            console.log("url "+ spendObj['url']);     
-            var spend = new Spend(spendObj);
-            //save new spend
-            spend.save(function(err,data){
-              if(err){
-                var error = {
-                  status: "ERROR",
-                  message: err
-                }
-                return res.json(err)
-              }
-              var jsonData = {
-                status: "OK",
-                spend: data
-              }
-              //res.json(jsonData);  
-              return res.redirect('/submit-spend'); 
-            });//save end
-          }
-        }); // end of putObject function
-      });// end of read file
+      saveImageToS3();
     }else{
-      var url='';  
-      spendObj['url'] = url; 
-      var spend = new Spend(spendObj);
-      spend.save(function(err,data){
-        if(err){
-          var error = {
-            status: "ERROR",
-            message: err
-          }
-          return res.json(err)
-        }
-        var jsonData = {
-          status: "OK",
-          spend: data
-        }
-        //res.json(jsonData);  
-        return res.redirect('/submit-spend'); 
-      });  
+      var url=''; 
+      saveNewSpend(url);  
     }
+  }
+
+  function saveNewSpend(url){
+    spendObj['url'] = url; 
+    console.log("url in saveNewSpend "+ spendObj['url']);     
+    var spend = new Spend(spendObj);
+    console.log("spend in saveNewSpend "+spend);
+    spend.save(function(err,data){
+      if(err){
+        var error = {
+          status: "ERROR",
+          message: err
+        }
+        return res.json(err)
+      }
+      var jsonData = {
+        status: "OK",
+        spend: data
+      }
+      //res.json(jsonData);  
+      return res.redirect('/submit-spend'); 
+    });//save end
+  }
+
+  function saveImageToS3(){
+    var cleanedFileName = cleanFileName(filename);
+    fs.readFile(path, function(err, file_buffer){
+      var s3bucket = new AWS.S3({params: {Bucket: awsBucketName}});
+      var params = {
+        Key: cleanedFileName,
+        Body: file_buffer,
+        ACL: 'public-read',
+        ContentType: mimeType
+      };
+      s3bucket.putObject(params, function(err, data) {
+        if (err) {
+          console.log(err)
+          return;
+        } else {
+          console.log("Successfully uploaded image to s3 bucket");
+          //add the s3 url our spend object from above
+          var s3Url = s3Path + cleanedFileName;
+          console.log("s3Url in saves3Image function" + s3Url);
+          saveNewSpend(s3Url);
+        }
+      }); // end of putObject function
+    });// end of read file
+  }
 })//end route
 
 function saveNewSpend(spendObj,url){
@@ -227,19 +221,13 @@ function saveImageToS3(path,cleanedFileName,mimeType,spendObj){
 }
 
 function cleanFileName (filename) {
-  // cleans and generates new filename for example userID=abc123 and filename="My Pet Dog.jpg"
-  // will return "abc123_my_pet_dog.jpg"
   var fileParts = filename.split(".");
-  //get the file extension
   var fileExtension = fileParts[fileParts.length-1]; //get last part of file
-  
-  //add time string to make filename a little more random
   d = new Date();
   timeStr = d.getTime();
   
   //name without extension
   newFileName = fileParts[0];
-  
   return newFilename = timeStr + "_" + fileParts[0].toLowerCase().replace(/[^\w ]+/g,'').replace(/ +/g,'_') + "." + fileExtension;   
 }
 //------------------------------------------------------------------------------------------//
