@@ -57,7 +57,7 @@ router.get('/add-with-image', function(req,res){
 
 // /**----api/create/image-------------------------------------------------------------------------//
 
-router.post('/api/create/image', multipartMiddleware, function(req,res){
+router.post('/api/create/image', multipartMiddleware, function(req,res) {
 
     
 //    console.log('the incoming files >> ' + JSON.stringify(req.files)); 
@@ -125,85 +125,129 @@ router.post('/api/create/image', multipartMiddleware, function(req,res){
       }
     })//location end (file)
 
-     
      //image thing (file)
+    var size = req.files.image.size;
     var filename = req.files.image.name; // actual filename of file
     var path = req.files.image.path; // will be put into a temp directory
     var mimeType = req.files.image.type; // image/jpeg or actual mime type
-   
-    var cleanedFileName = cleanFileName(filename);
-    fs.readFile(path, function(err, file_buffer){
 
-    // reference to the Amazon S3 Bucket
+    if(size > 0){
+      var cleanedFileName = cleanFileName(filename);
+      //save image to S3 and get new spend
+      fs.readFile(path, function(err, file_buffer){
+        var s3bucket = new AWS.S3({params: {Bucket: awsBucketName}});
+        var params = {
+          Key: cleanedFileName,
+          Body: file_buffer,
+          ACL: 'public-read',
+          ContentType: mimeType
+        };
+        s3bucket.putObject(params, function(err, data) {
+          if (err) {
+            console.log(err)
+            return;
+          } 
+          else {
+            console.log("Successfully uploaded image to s3 bucket");
+            var url = s3Path + cleanedFileName;
+            spendObj['url'] = url; 
+            console.log("url "+ spendObj['url']);     
+            var spend = new Spend(spendObj);
+            //save new spend
+            spend.save(function(err,data){
+              if(err){
+                var error = {
+                  status: "ERROR",
+                  message: err
+                }
+                return res.json(err)
+              }
+              var jsonData = {
+                status: "OK",
+                spend: data
+              }
+              //res.json(jsonData);  
+              return res.redirect('/submit-spend'); 
+            });//save end
+          }
+        }); // end of putObject function
+      });// end of read file
+    }else{
+      var url='';  
+      spendObj['url'] = url; 
+      var spend = new Spend(spendObj);
+      spend.save(function(err,data){
+        if(err){
+          var error = {
+            status: "ERROR",
+            message: err
+          }
+          return res.json(err)
+        }
+        var jsonData = {
+          status: "OK",
+          spend: data
+        }
+        //res.json(jsonData);  
+        return res.redirect('/submit-spend'); 
+      });  
+    }
+})//end route
+
+function saveNewSpend(spendObj,url){
+  spendObj['url'] = url; 
+  console.log("url in saveNewSpend "+ spendObj['url']);     
+  var spend = new Spend(spendObj);
+}
+
+function saveImageToS3(path,cleanedFileName,mimeType,spendObj){
+  fs.readFile(path, function(err, file_buffer){
     var s3bucket = new AWS.S3({params: {Bucket: awsBucketName}});
-    
     var params = {
       Key: cleanedFileName,
       Body: file_buffer,
       ACL: 'public-read',
       ContentType: mimeType
     };
-
-      // Put the above Object in the Bucket
     s3bucket.putObject(params, function(err, data) {
       if (err) {
         console.log(err)
         return;
       } else {
-        console.log("Successfully uploaded data to s3 bucket");
-
-        // now that we have the image
-        // we can add the s3 url our spend object from above
-        spendObj['url'] = s3Path + cleanedFileName;
-        console.log(spendObj['url']);
-       
+        console.log("Successfully uploaded image to s3 bucket");
+        //add the s3 url our spend object from above
+        var s3Url = s3Path + cleanedFileName;
+        console.log("s3Url in saves3Image function" + s3Url);
+        spendObj['url'] = url; 
+        console.log("url in saveNewSpend "+ spendObj['url']);     
         var spend = new Spend(spendObj);
-
-        spend.save(function(err,data){
-          if(err){
-            var error = {
-              status: "ERROR",
-              message: err
-            }
-            return res.json(err)
-          }
-          var jsonData = {
-            status: "OK",
-            spend: data
-          }
-          //return res.json(jsonData);  
-          return res.redirect('/submit-spend');      
-        })//save new spend
       }
     }); // end of putObject function
-   });// end of read file
-})//end route
+  });// end of read file
+}
 
 function cleanFileName (filename) {
-    
-    // cleans and generates new filename for example userID=abc123 and filename="My Pet Dog.jpg"
-    // will return "abc123_my_pet_dog.jpg"
-    var fileParts = filename.split(".");
-    
-    //get the file extension
-    var fileExtension = fileParts[fileParts.length-1]; //get last part of file
-    
-    //add time string to make filename a little more random
-    d = new Date();
-    timeStr = d.getTime();
-    
-    //name without extension
-    newFileName = fileParts[0];
-    
-    return newFilename = timeStr + "_" + fileParts[0].toLowerCase().replace(/[^\w ]+/g,'').replace(/ +/g,'_') + "." + fileExtension;
-    
+  // cleans and generates new filename for example userID=abc123 and filename="My Pet Dog.jpg"
+  // will return "abc123_my_pet_dog.jpg"
+  var fileParts = filename.split(".");
+  //get the file extension
+  var fileExtension = fileParts[fileParts.length-1]; //get last part of file
+  
+  //add time string to make filename a little more random
+  d = new Date();
+  timeStr = d.getTime();
+  
+  //name without extension
+  newFileName = fileParts[0];
+  
+  return newFilename = timeStr + "_" + fileParts[0].toLowerCase().replace(/[^\w ]+/g,'').replace(/ +/g,'_') + "." + fileExtension;   
 }
 //------------------------------------------------------------------------------------------//
 
 function convertMonthNameToNumber(monthName) {
-    var myDate = new Date(monthName + " 1, 2000");
-    var monthDigit = myDate.getMonth();
-    return isNaN(monthDigit) ? 0 : (monthDigit + 1);
+  var myDate = new Date(monthName + " 1, 2000");
+  var monthDigit = myDate.getMonth();
+  return isNaN(monthDigit) ? 0 : (monthDigit + 1);
 }
 //------------------------------------------------------------------------------------------//
 router.get('/api/get', function(req, res){
