@@ -52,10 +52,7 @@ router.get('/add-with-image', function(req,res){
   res.render('input.html')
 
 })
-
-
-
-// /**----api/create/image-------------------------------------------------------------------------//
+//----api/create/image-------------------------------------------------------------------------//
 
 router.post('/api/create/image', multipartMiddleware, function(req,res) {
 //    console.log('the incoming files >> ' + JSON.stringify(req.files)); 
