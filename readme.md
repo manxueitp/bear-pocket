@@ -6,14 +6,14 @@ By developing this app, I'm aiming to learn how to model, generate, and store da
 
 The next step is learning [React native](https://facebook.github.io/react-native/) and rebuild main function with react 
 
-### Weekly Goal
-4/17
-* :boom: Learn [Test-Driven-Development](https://developers.redhat.com/blog/2016/03/15/test-driven-development-for-building-apis-in-node-js-and-express/)--learn how to build application in more stable way.
-* :honeybee:Visulize daily consumption by using [Chart.js](http://www.chartjs.org/) and [amCharts](https://www.amcharts.com/javascript-charts/)
-* :blue_book:Learn [react-native](https://github.com/manxueitp/react-native-learn)
+### Weekly goal
+4/17-4/23
+* []:boom: Learn [Test-Driven-Development](https://developers.redhat.com/blog/2016/03/15/test-driven-development-for-building-apis-in-node-js-and-express/)--learn how to build application in more stable way.
+* []:honeybee:Visulize daily consumption by using [Chart.js](http://www.chartjs.org/) and [amCharts](https://www.amcharts.com/javascript-charts/)
+* []:blue_book:Learn [react-native](https://github.com/manxueitp/react-native-learn)
 
 
-### how to run the app
+### How to run the app
 ##### Set up the app (git repository&heroku app)
 1. clone this repository locally
 2. Run **npm install** to get all required libraries.
