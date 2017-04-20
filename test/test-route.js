@@ -18,7 +18,8 @@ describe('API test', function(){
           .get('/api/get/:2017-04-19')
           .expect(200)
           .end((err,res)=>{
-            res.body.should.be.an.object();  
+            res.body.should.be.an.Object(); 
+            done(); 
           })
     })
 })
