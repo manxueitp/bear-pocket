@@ -4,7 +4,7 @@ var month=dateFormat(now,"mmmm");
 var date= dateFormat(now,"dd");
 var year=dateFormat(now,"yyyy");
 var time=dateFormat(now,"isoTime");
-var today=dateFormat(now,"isoDate");
+var today=dateFormat(now,"isoDate");//yyyy-mm-dd
 var nowmonth = dateFormat(now,"mm");
 
 //get icon (category) of current spend(spinds[i])
