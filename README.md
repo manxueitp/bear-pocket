@@ -9,8 +9,11 @@ The next step is learning [React native](https://facebook.github.io/react-native
 ### Weekly goal
 4/17-4/23
 * [x] :boom: Learn [Test-Driven-Development](https://developers.redhat.com/blog/2016/03/15/test-driven-development-for-building-apis-in-node-js-and-express/) and [Behavior-Driven-Developement](https://semaphoreci.com/community/tutorials/getting-started-with-node-js-and-mocha); [Mocha](https://mochajs.org/)--learn how to build application in more stable way.
-* [ ] :honeybee:Visulize daily consumption by using [Chart.js](http://www.chartjs.org/) and [amCharts](https://www.amcharts.com/javascript-charts/)
-* [ ] :blue_book:Learn [react-native](https://github.com/manxueitp/react-native-learn)
+* [x] :honeybee:Visulize daily consumption by using [Chart.js](http://www.chartjs.org/) and [amCharts](https://www.amcharts.com/javascript-charts/)
+* [x] :blue_book:Learn [react-native](https://github.com/manxueitp/react-native-learn)
+
+4/24-4/30
+* [x] :blue_book:Learn the structure of [react-native](https://github.com/manxueitp/react-native-learn)
 
 
 ### How to run the app
